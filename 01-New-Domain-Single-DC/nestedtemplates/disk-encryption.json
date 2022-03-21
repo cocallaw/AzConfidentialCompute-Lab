@@ -62,7 +62,7 @@
         },
         {
             "type": "Microsoft.Compute/diskEncryptionSets",
-            "apiVersion": "2019-07-01",
+            "apiVersion": "2021-12-01",
             "name": "[parameters('diskencsetName')]",
             "location": "[parameters('location')]",
             "dependsOn": [

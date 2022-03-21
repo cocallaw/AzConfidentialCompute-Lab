@@ -189,13 +189,6 @@
                             "storageAccountType": "StandardSSD_LRS"
                         }
                     },
-                    "securityProfile": {
-                        "uefiSettings": {
-                            "secureBootEnabled": false,
-                            "vTpmEnabled": true
-                        },
-                        "securityType": "ConfidentialVM"
-                    },
                     "dataDisks": [
                         {
                             "name": "[concat(parameters('virtualMachineName'), '_DataDisk')]",
@@ -208,6 +201,13 @@
                             "lun": 0
                         }
                     ]
+                },
+                "securityProfile": {
+                    "uefiSettings": {
+                        "secureBootEnabled": false,
+                        "vTpmEnabled": true
+                    },
+                    "securityType": "ConfidentialVM"
                 },
                 "networkProfile": {
                     "networkInterfaces": [

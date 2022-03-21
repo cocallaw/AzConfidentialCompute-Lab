@@ -1,0 +1,109 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "type": "string",
+            "defaultValue": "[resourceGroup().location]",
+            "metadata": {
+                "description": "Location for all resources."
+            }
+        },
+        "diskencsetName": {
+            "type": "string",
+            "defaultValue": "DEC-Set-ACC",
+            "metadata": {
+                "description": "Name of Disk Encryption Set"
+            }
+        }
+    },
+    "variables": {
+        "keyvaultName": "AKV-ExACC-Lab",
+        "keyVaultSku": "standard",
+        "keyName": "key1"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.KeyVault/vaults",
+            "apiVersion": "2019-09-01",
+            "name": "[variables('keyvaultName')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "enableRbacAuthorization": false,
+                "enableSoftDelete": true,
+                "enablePurgeProtection": true,
+                "enabledForDeployment": true,
+                "enabledForDiskEncryption": true,
+                "enabledForTemplateDeployment": true,
+                "tenantId": "[subscription().tenantId]",
+                "accessPolicies": [],
+                "sku": {
+                    "name": "[variables('keyVaultSku')]",
+                    "family": "A"
+                },
+                "networkAcls": {
+                    "defaultAction": "Allow",
+                    "bypass": "AzureServices"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.KeyVault/vaults/keys",
+            "apiVersion": "2019-09-01",
+            "name": "[concat(variables('keyvaultName'), '/', variables('keyName'))]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults', variables('keyvaultName'))]"
+            ],
+            "properties": {
+                "kty": "RSA",
+                "keySize": 4096
+            }
+        },
+        {
+            "type": "Microsoft.Compute/diskEncryptionSets",
+            "apiVersion": "2019-07-01",
+            "name": "[parameters('diskencsetName')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults/keys', variables('keyvaultName'), variables('keyName'))]"
+            ],
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "properties": {
+                "activeKey": {
+                    "sourceVault": {
+                        "id": "[resourceId('Microsoft.KeyVault/vaults', variables('keyvaultName'))]"
+                    },
+                    "keyUrl": "[reference(resourceId('Microsoft.KeyVault/vaults/keys', variables('keyvaultName'), variables('keyName')), '2019-09-01', 'Full').properties.keyUriWithVersion]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.KeyVault/vaults/accessPolicies",
+            "apiVersion": "2019-09-01",
+            "name": "[concat(variables('keyvaultName'), '/add')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/diskEncryptionSets', parameters('diskencsetName'))]"
+            ],
+            "properties": {
+                "accessPolicies": [
+                    {
+                        "tenantId": "[subscription().tenantId]",
+                        "objectId": "[reference(resourceId('Microsoft.Compute/diskEncryptionSets', parameters('diskencsetName')), '2019-07-01', 'Full').identity.PrincipalId]",
+                        "permissions": {
+                            "keys": [
+                                "Get",
+                                "WrapKey",
+                                "UnwrapKey"
+                            ],
+                            "secrets": [],
+                            "certificates": []
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}

@@ -102,13 +102,37 @@
         }
     },
     "variables": {
-        "networkInterfaceName": "[concat('nic-',parameters('virtualMachineName'),'-01')]"
+        "networkInterfaceName": "[concat('nic-',parameters('virtualMachineName'),'-01')]",
+        "diskencsetName": "DEC-Set-ACC"
     },
     "resources": [
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2018-11-01",
+            "name": "DiskEncryption",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('nestedtemplates/disk-encryption.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "location": {
+                        "value": "[parameters('location')]"
+                    },
+                    "diskencsetName": {
+                        "value": "[variables('diskencsetName')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2018-11-01",
             "name": "VNet",
+            "dependsOn": [
+                "DiskEncryption"
+            ],
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -159,7 +183,7 @@
         },
         {
             "type": "Microsoft.Compute/virtualMachines",
-            "apiVersion": "2021-07-01",
+            "apiVersion": "2021-11-01",
             "name": "[parameters('virtualMachineName')]",
             "location": "[parameters('location')]",
             "dependsOn": [
@@ -186,7 +210,13 @@
                         "caching": "ReadWrite",
                         "createOption": "FromImage",
                         "managedDisk": {
-                            "storageAccountType": "StandardSSD_LRS"
+                            "storageAccountType": "StandardSSD_LRS",
+                            "securityProfile": {
+                                "diskEncryptionSet": {
+                                    "id": "[resourceId('Microsoft.Compute/diskEncryptionSets', variables('diskencsetName'))]"
+                                },
+                                "securityEncryptionType": "VMGuestStateOnly"
+                            }
                         }
                     },
                     "dataDisks": [
@@ -196,7 +226,13 @@
                             "createOption": "Empty",
                             "diskSizeGB": 20,
                             "managedDisk": {
-                                "storageAccountType": "StandardSSD_LRS"
+                                "storageAccountType": "StandardSSD_LRS",
+                                "securityProfile": {
+                                    "diskEncryptionSet": {
+                                        "id": "[resourceId('Microsoft.Compute/diskEncryptionSets', variables('diskencsetName'))]"
+                                    },
+                                    "securityEncryptionType": "VMGuestStateOnly"
+                                }
                             },
                             "lun": 0
                         }

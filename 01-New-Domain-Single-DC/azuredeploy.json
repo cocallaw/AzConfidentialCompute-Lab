@@ -108,7 +108,7 @@
     "resources": [
         {
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2018-11-01",
+            "apiVersion": "2021-04-01",
             "name": "DiskEncryption",
             "properties": {
                 "mode": "Incremental",
@@ -128,7 +128,7 @@
         },
         {
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2018-11-01",
+            "apiVersion": "2021-04-01",
             "name": "VNet",
             "dependsOn": [
                 "DiskEncryption"
@@ -214,8 +214,7 @@
                             "securityProfile": {
                                 "diskEncryptionSet": {
                                     "id": "[resourceId('Microsoft.Compute/diskEncryptionSets', variables('diskencsetName'))]"
-                                },
-                                "securityEncryptionType": "VMGuestStateOnly"
+                                }
                             }
                         }
                     },
@@ -230,8 +229,7 @@
                                 "securityProfile": {
                                     "diskEncryptionSet": {
                                         "id": "[resourceId('Microsoft.Compute/diskEncryptionSets', variables('diskencsetName'))]"
-                                    },
-                                    "securityEncryptionType": "VMGuestStateOnly"
+                                    }
                                 }
                             },
                             "lun": 0

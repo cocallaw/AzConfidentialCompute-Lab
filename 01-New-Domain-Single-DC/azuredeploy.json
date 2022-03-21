@@ -101,7 +101,7 @@
             }
         }
     },
-    "variables":{
+    "variables": {
         "networkInterfaceName": "[concat('nic-',parameters('virtualMachineName'),'-01')]"
     },
     "resources": [
@@ -178,16 +178,23 @@
                     "imageReference": {
                         "publisher": "MicrosoftWindowsServer",
                         "offer": "WindowsServer",
-                        "sku": "2016-Datacenter",
+                        "sku": "2019-datacenter-smalldisk-g2",
                         "version": "latest"
                     },
                     "osDisk": {
                         "name": "[concat(parameters('virtualMachineName'),'_OSDisk')]",
-                        "caching": "ReadOnly",
+                        "caching": "ReadWrite",
                         "createOption": "FromImage",
                         "managedDisk": {
                             "storageAccountType": "StandardSSD_LRS"
                         }
+                    },
+                    "securityProfile": {
+                        "uefiSettings": {
+                            "secureBootEnabled": false,
+                            "vTpmEnabled": true
+                        },
+                        "securityType": "ConfidentialVM"
                     },
                     "dataDisks": [
                         {

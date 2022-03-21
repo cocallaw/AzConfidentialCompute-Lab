@@ -22,10 +22,20 @@
         },
         "vmSize": {
             "type": "string",
-            "defaultValue": "Standard_D2s_v3",
+            "defaultValue": "Standard_DC2as_v5",
             "metadata": {
-                "description": "Size of the VM for the controller"
-            }
+                "description": "Size of the VM for the DC"
+            },
+            "allowedValues": [
+                "Standard_DC2as_v5",
+                "Standard_DC4as_v5",
+                "Standard_DC8as_v5",
+                "Standard_DC16as_v5",
+                "Standard_DC32as_v5",
+                "Standard_DC48as_v5",
+                "Standard_DC64as_v5",
+                "Standard_DC96as_v5"
+            ]
         },
         "_artifactsLocation": {
             "type": "string",
@@ -69,20 +79,6 @@
                 "description": "Virtual network address range."
             }
         },
-        "networkInterfaceName": {
-            "type": "string",
-            "defaultValue": "adNic",
-            "metadata": {
-                "description": "Network interface name."
-            }
-        },
-        "privateIPAddress": {
-            "type": "string",
-            "defaultValue": "10.0.0.4",
-            "metadata": {
-                "description": "Private IP address."
-            }
-        },
         "subnetName": {
             "type": "string",
             "defaultValue": "adSubnet",
@@ -97,35 +93,18 @@
                 "description": "Subnet IP range."
             }
         },
-        "availabilitySetName": {
+        "privateIPAddress": {
             "type": "string",
-            "defaultValue": "adAvailabiltySet",
+            "defaultValue": "10.0.0.4",
             "metadata": {
-                "description": "Availability set name."
-            }
-        },
-        "loadBalancerName": {
-            "type": "string",
-            "defaultValue": "adLoadBalancer",
-            "metadata": {
-                "description": "Load balancer name."
+                "description": "DC Private IP address."
             }
         }
     },
+    "variables":{
+        "networkInterfaceName": "[concat('nic-',parameters('virtualMachineName'),'-01')]"
+    },
     "resources": [
-        {
-            "type": "Microsoft.Compute/availabilitySets",
-            "apiVersion": "2019-03-01",
-            "location": "[parameters('location')]",
-            "name": "[parameters('availabilitySetName')]",
-            "properties": {
-                "PlatformUpdateDomainCount": 20,
-                "PlatformFaultDomainCount": 2
-            },
-            "sku": {
-                "name": "Aligned"
-            }
-        },
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2018-11-01",
@@ -158,11 +137,10 @@
         {
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "2019-02-01",
-            "name": "[parameters('networkInterfaceName')]",
+            "name": "[variables('networkInterfaceName')]",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "VNet",
-                "[parameters('loadBalancerName')]"
+                "VNet"
             ],
             "properties": {
                 "ipConfigurations": [
@@ -185,16 +163,11 @@
             "name": "[parameters('virtualMachineName')]",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "[parameters('networkInterfaceName')]",
-                "[parameters('availabilitySetName')]",
-                "[parameters('loadBalancerName')]"
+                "[variables('networkInterfaceName')]"
             ],
             "properties": {
                 "hardwareProfile": {
                     "vmSize": "[parameters('vmSize')]"
-                },
-                "availabilitySet": {
-                    "id": "[resourceId('Microsoft.Compute/availabilitySets', parameters('availabilitySetName'))]"
                 },
                 "osProfile": {
                     "computerName": "[parameters('virtualMachineName')]",
@@ -232,7 +205,7 @@
                 "networkProfile": {
                     "networkInterfaces": [
                         {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaceName'))]"
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('networkInterfaceName'))]"
                         }
                     ]
                 }

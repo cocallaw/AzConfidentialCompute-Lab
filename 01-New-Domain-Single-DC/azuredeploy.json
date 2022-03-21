@@ -211,10 +211,8 @@
                         "createOption": "FromImage",
                         "managedDisk": {
                             "storageAccountType": "StandardSSD_LRS",
-                            "securityProfile": {
-                                "diskEncryptionSet": {
-                                    "id": "[resourceId('Microsoft.Compute/diskEncryptionSets', variables('diskencsetName'))]"
-                                }
+                            "diskEncryptionSet": {
+                                "id": "[resourceId('Microsoft.Compute/diskEncryptionSets', variables('diskencsetName'))]"
                             }
                         }
                     },
@@ -226,10 +224,8 @@
                             "diskSizeGB": 20,
                             "managedDisk": {
                                 "storageAccountType": "StandardSSD_LRS",
-                                "securityProfile": {
-                                    "diskEncryptionSet": {
-                                        "id": "[resourceId('Microsoft.Compute/diskEncryptionSets', variables('diskencsetName'))]"
-                                    }
+                                "diskEncryptionSet": {
+                                    "id": "[resourceId('Microsoft.Compute/diskEncryptionSets', variables('diskencsetName'))]"
                                 }
                             },
                             "lun": 0

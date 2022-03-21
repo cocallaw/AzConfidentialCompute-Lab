@@ -202,13 +202,6 @@
                         }
                     ]
                 },
-                "securityProfile": {
-                    "uefiSettings": {
-                        "secureBootEnabled": false,
-                        "vTpmEnabled": true
-                    },
-                    "securityType": "ConfidentialVM"
-                },
                 "networkProfile": {
                     "networkInterfaces": [
                         {

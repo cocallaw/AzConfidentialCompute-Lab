@@ -251,8 +251,7 @@
                                 "securityProfile": {
                                     "diskEncryptionSet": {
                                         "id": "[resourceId('Microsoft.Compute/diskEncryptionSets', variables('diskencsetName'))]"
-                                    },
-                                    "securityEncryptionType": "DiskWithVMGuestState"
+                                    }
                                 }
                             },
                             "lun": 0

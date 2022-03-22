@@ -37,6 +37,17 @@
                 "Standard_DC96as_v5"
             ]
         },
+        "osImageName": {
+            "type": "string",
+            "defaultValue": "Windows Server 2022 Gen 2",
+            "allowedValues": [
+                "Windows Server 2022 Gen 2",
+                "Windows Server 2019 Gen 2"
+            ],
+            "metadata": {
+                "description": "OS Image for the DC"
+            }
+        },
         "_artifactsLocation": {
             "type": "string",
             "metadata": {
@@ -102,8 +113,28 @@
         }
     },
     "variables": {
-        "networkInterfaceName": "[concat('nic-',parameters('virtualMachineName'),'-01')]",
-        "diskencsetName": "DEC-Set-ACC"
+        "networkInterfaceName": "[concat(parameters('virtualMachineName'),'-nic')]",
+        "diskencsetName": "DEC-Set-ACC",
+        "imageReference": "[variables('imageList')[parameters('osImageName')]]",
+        "imageList": {
+            "Windows Server 2022 Gen 2": {
+                "publisher": "microsoftwindowsserver",
+                "offer": "windowsserver",
+                "sku": "2022-datacenter-smalldisk-g2",
+                "version": "latest"
+            },
+            "Windows Server 2019 Gen 2": {
+                "publisher": "microsoftwindowsserver",
+                "offer": "windowsserver",
+                "sku": "2019-datacenter-smalldisk-g2",
+                "version": "latest"
+            }
+        },
+        "isWindows": "[contains(parameters('osImageName'), 'Windows')]",
+        "windowsConfiguration": {
+            "enableAutomaticUpdates": "true",
+            "provisionVmAgent": "true"
+        }
     },
     "resources": [
         {
@@ -183,28 +214,18 @@
         },
         {
             "type": "Microsoft.Compute/virtualMachines",
-            "apiVersion": "2021-11-01",
+            "apiVersion": "2021-07-01",
             "name": "[parameters('virtualMachineName')]",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "[variables('networkInterfaceName')]"
+                "[concat('Microsoft.Network/networkInterfaces/', variables('networkInterfaceName'))]"
             ],
             "properties": {
                 "hardwareProfile": {
                     "vmSize": "[parameters('vmSize')]"
                 },
-                "osProfile": {
-                    "computerName": "[parameters('virtualMachineName')]",
-                    "adminUsername": "[parameters('adminUsername')]",
-                    "adminPassword": "[parameters('adminPassword')]"
-                },
                 "storageProfile": {
-                    "imageReference": {
-                        "publisher": "MicrosoftWindowsServer",
-                        "offer": "WindowsServer",
-                        "sku": "2019-datacenter-smalldisk-g2",
-                        "version": "latest"
-                    },
+                    "imageReference": "[variables('imageReference')]",
                     "osDisk": {
                         "name": "[concat(parameters('virtualMachineName'),'_OSDisk')]",
                         "caching": "ReadWrite",
@@ -214,7 +235,8 @@
                             "securityProfile": {
                                 "diskEncryptionSet": {
                                     "id": "[resourceId('Microsoft.Compute/diskEncryptionSets', variables('diskencsetName'))]"
-                                }
+                                },
+                                "securityEncryptionType" : "DiskWithVMGuestState"
                             }
                         }
                     },
@@ -229,7 +251,8 @@
                                 "securityProfile": {
                                     "diskEncryptionSet": {
                                         "id": "[resourceId('Microsoft.Compute/diskEncryptionSets', variables('diskencsetName'))]"
-                                    }
+                                    },
+                                    "securityEncryptionType" : "DiskWithVMGuestState"
                                 }
                             },
                             "lun": 0
@@ -242,6 +265,12 @@
                             "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('networkInterfaceName'))]"
                         }
                     ]
+                },
+                "osProfile": {
+                    "computerName": "[parameters('virtualMachineName')]",
+                    "adminUsername": "[parameters('adminUsername')]",
+                    "adminPassword": "[parameters('adminPassword')]",
+                    "windowsConfiguration": "[if(variables('isWindows'), variables('windowsConfiguration'), json('null'))]"
                 }
             },
             "resources": [

@@ -75,44 +75,14 @@
             "metadata": {
                 "description": "Virtual machine name."
             }
-        },
-        "virtualNetworkName": {
-            "type": "string",
-            "defaultValue": "adVNET",
-            "metadata": {
-                "description": "Virtual network name."
-            }
-        },
-        "virtualNetworkAddressRange": {
-            "type": "string",
-            "defaultValue": "10.0.0.0/16",
-            "metadata": {
-                "description": "Virtual network address range."
-            }
-        },
-        "subnetName": {
-            "type": "string",
-            "defaultValue": "adSubnet",
-            "metadata": {
-                "description": "Subnet name."
-            }
-        },
-        "subnetRange": {
-            "type": "string",
-            "defaultValue": "10.0.0.0/24",
-            "metadata": {
-                "description": "Subnet IP range."
-            }
-        },
-        "privateIPAddress": {
-            "type": "string",
-            "defaultValue": "10.0.0.4",
-            "metadata": {
-                "description": "DC Private IP address."
-            }
         }
     },
     "variables": {
+        "virtualNetworkName" : "vnet-acc-lab",
+        "virtualNetworkAddressRange": "10.0.0.0/16",
+        "subnetName" : "snManagament",
+        "subnetRange" : "10.0.0.0/24",
+        "privateIPAddress": "10.0.0.4",
         "networkInterfaceName": "[concat(parameters('virtualMachineName'),'-nic')]",
         "diskencsetName": "DEC-Set-ACC",
         "imageReference": "[variables('imageList')[parameters('osImageName')]]",
@@ -172,16 +142,16 @@
                 },
                 "parameters": {
                     "virtualNetworkName": {
-                        "value": "[parameters('virtualNetworkName')]"
+                        "value": "[variables('virtualNetworkName')]"
                     },
                     "virtualNetworkAddressRange": {
-                        "value": "[parameters('virtualNetworkAddressRange')]"
+                        "value": "[variables('virtualNetworkAddressRange')]"
                     },
                     "subnetName": {
-                        "value": "[parameters('subnetName')]"
+                        "value": "[variables('subnetName')]"
                     },
                     "subnetRange": {
-                        "value": "[parameters('subnetRange')]"
+                        "value": "[variables('subnetRange')]"
                     },
                     "location": {
                         "value": "[parameters('location')]"
@@ -203,9 +173,9 @@
                         "name": "ipconfig1",
                         "properties": {
                             "privateIPAllocationMethod": "Static",
-                            "privateIPAddress": "[parameters('privateIPAddress')]",
+                            "privateIPAddress": "[variables('privateIPAddress')]",
                             "subnet": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))]"
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('subnetName'))]"
                             }
                         }
                     }
@@ -326,20 +296,20 @@
                 },
                 "parameters": {
                     "virtualNetworkName": {
-                        "value": "[parameters('virtualNetworkName')]"
+                        "value": "[variables('virtualNetworkName')]"
                     },
                     "virtualNetworkAddressRange": {
-                        "value": "[parameters('virtualNetworkAddressRange')]"
+                        "value": "[variables('virtualNetworkAddressRange')]"
                     },
                     "subnetName": {
-                        "value": "[parameters('subnetName')]"
+                        "value": "[variables('subnetName')]"
                     },
                     "subnetRange": {
-                        "value": "[parameters('subnetRange')]"
+                        "value": "[variables('subnetRange')]"
                     },
                     "DNSServerAddress": {
                         "value": [
-                            "[parameters('privateIPAddress')]"
+                            "[variables('privateIPAddress')]"
                         ]
                     },
                     "location": {

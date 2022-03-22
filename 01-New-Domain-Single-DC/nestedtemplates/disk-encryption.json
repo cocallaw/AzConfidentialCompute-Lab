@@ -11,7 +11,7 @@
         },
         "diskencsetName": {
             "type": "string",
-            "defaultValue": "DEC-Set-ACC",
+            "defaultValue": "DESet-ACC-01",
             "metadata": {
                 "description": "Name of Disk Encryption Set"
             }

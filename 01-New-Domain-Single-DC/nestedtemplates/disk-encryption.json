@@ -19,7 +19,7 @@
     },
     "variables": {
         "keyvaultName": "[concat('AKV-ACCLab-', uniquestring(resourceGroup().id, deployment().name))]",
-        "keyVaultSku": "standard",
+        "keyVaultSku": "premium",
         "keyName": "key1"
     },
     "resources": [

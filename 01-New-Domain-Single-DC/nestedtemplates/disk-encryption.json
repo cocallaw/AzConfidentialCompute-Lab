@@ -78,7 +78,7 @@
                     },
                     "keyUrl": "[reference(resourceId('Microsoft.KeyVault/vaults/keys', variables('keyvaultName'), variables('keyName')), '2019-09-01', 'Full').properties.keyUriWithVersion]"
                 },
-                "encryptionType": "ConfidentialVmEncryptedWithCustomerKey"
+                "encryptionType": "EncryptionAtRestWithCustomerKey"
             }
         },
         {

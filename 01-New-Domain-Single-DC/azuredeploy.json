@@ -236,7 +236,7 @@
                                 "diskEncryptionSet": {
                                     "id": "[resourceId('Microsoft.Compute/diskEncryptionSets', variables('diskencsetName'))]"
                                 },
-                                "securityEncryptionType" : "DiskWithVMGuestState"
+                                "securityEncryptionType": "DiskWithVMGuestState"
                             }
                         }
                     },
@@ -252,7 +252,7 @@
                                     "diskEncryptionSet": {
                                         "id": "[resourceId('Microsoft.Compute/diskEncryptionSets', variables('diskencsetName'))]"
                                     },
-                                    "securityEncryptionType" : "DiskWithVMGuestState"
+                                    "securityEncryptionType": "DiskWithVMGuestState"
                                 }
                             },
                             "lun": 0
@@ -271,6 +271,13 @@
                     "adminUsername": "[parameters('adminUsername')]",
                     "adminPassword": "[parameters('adminPassword')]",
                     "windowsConfiguration": "[if(variables('isWindows'), variables('windowsConfiguration'), json('null'))]"
+                },
+                "securityProfile": {
+                    "securityType": "ConfidentialVM",
+                    "uefiSettings": {
+                        "secureBootEnabled": true,
+                        "vTpmEnabled": true
+                    }  
                 }
             },
             "resources": [

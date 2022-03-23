@@ -21,8 +21,8 @@
         "keyvaultName": "[concat('AKV-ACCLab-', uniquestring(resourceGroup().id, deployment().name))]",
         "keyVaultSku": "premium",
         "keyName": "key1",
-        "policyType": "JSON",
-        "policyData": "{\"anyOf\":[{\"allOf\":[{\"claim\":\"x-ms-attestation-type\",\"equals\":\"sevsnpvm\"},{\"claim\":\"x-ms-compliance-status\",\"equals\":\"azure-compliant-cvm\"}],\"authority\":\"https://sharedeus.eus.attest.azure.net/\"},{\"allOf\":[{\"claim\":\"x-ms-attestation-type\",\"equals\":\"sevsnpvm\"},{\"claim\":\"x-ms-compliance-status\",\"equals\":\"azure-compliant-cvm\"}],\"authority\":\"https://sharedwus.wus.attest.azure.net/\"},{\"allOf\":[{\"claim\":\"x-ms-attestation-type\",\"equals\":\"sevsnpvm\"},{\"claim\":\"x-ms-compliance-status\",\"equals\":\"azure-compliant-cvm\"}],\"authority\":\"https://sharedneu.neu.attest.azure.net/\"},{\"allOf\":[{\"claim\":\"x-ms-attestation-type\",\"equals\":\"sevsnpvm\"},{\"claim\":\"x-ms-compliance-status\",\"equals\":\"azure-compliant-cvm\"}],\"authority\":\"https://sharedweu.weu.attest.azure.net/\"}],\"version\":\"1.0.0\"}"
+        "policyType": "application/json; charset=utf-8",
+        "policyData": "{\"version\":\"1.0.0\",\"anyOf\":[{\"authority\":\"https://sharedeus.eus.attest.azure.net/\",\"allOf\":[{\"claim\":\"x-ms-attestation-type\",\"equals\":\"sevsnpvm\"},{\"claim\":\"x-ms-compliance-status\",\"equals\":\"azure-compliant-cvm\"}]},{\"authority\":\"https://sharedwus.wus.attest.azure.net/\",\"allOf\":[{\"claim\":\"x-ms-attestation-type\",\"equals\":\"sevsnpvm\"},{\"claim\":\"x-ms-compliance-status\",\"equals\":\"azure-compliant-cvm\"}]},{\"authority\":\"https://sharedneu.neu.attest.azure.net/\",\"allOf\":[{\"claim\":\"x-ms-attestation-type\",\"equals\":\"sevsnpvm\"},{\"claim\":\"x-ms-compliance-status\",\"equals\":\"azure-compliant-cvm\"}]},{\"authority\":\"https://sharedweu.weu.attest.azure.net/\",\"allOf\":[{\"claim\":\"x-ms-attestation-type\",\"equals\":\"sevsnpvm\"},{\"claim\":\"x-ms-compliance-status\",\"equals\":\"azure-compliant-cvm\"}]}]}"
     },
     "resources": [
         {
@@ -59,7 +59,7 @@
             ],
             "properties": {
                 "kty": "RSA-HSM",
-                "keySize": 4096,
+                "keySize": 3072,
                 "release_policy": {
                     "contentType": "[variables('policyType')]",
                     "data": "[variables('policyData')]"

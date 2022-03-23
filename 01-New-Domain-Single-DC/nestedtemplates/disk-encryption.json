@@ -20,12 +20,14 @@
     "variables": {
         "keyvaultName": "[concat('AKV-ACCLab-', uniquestring(resourceGroup().id, deployment().name))]",
         "keyVaultSku": "premium",
-        "keyName": "key1"
+        "keyName": "key1",
+        "policyType": "JSON",
+        "policyData": "{\"anyOf\":[{\"allOf\":[{\"claim\":\"x-ms-attestation-type\",\"equals\":\"sevsnpvm\"},{\"claim\":\"x-ms-compliance-status\",\"equals\":\"azure-compliant-cvm\"}],\"authority\":\"https://sharedeus.eus.attest.azure.net/\"},{\"allOf\":[{\"claim\":\"x-ms-attestation-type\",\"equals\":\"sevsnpvm\"},{\"claim\":\"x-ms-compliance-status\",\"equals\":\"azure-compliant-cvm\"}],\"authority\":\"https://sharedwus.wus.attest.azure.net/\"},{\"allOf\":[{\"claim\":\"x-ms-attestation-type\",\"equals\":\"sevsnpvm\"},{\"claim\":\"x-ms-compliance-status\",\"equals\":\"azure-compliant-cvm\"}],\"authority\":\"https://sharedneu.neu.attest.azure.net/\"},{\"allOf\":[{\"claim\":\"x-ms-attestation-type\",\"equals\":\"sevsnpvm\"},{\"claim\":\"x-ms-compliance-status\",\"equals\":\"azure-compliant-cvm\"}],\"authority\":\"https://sharedweu.weu.attest.azure.net/\"}],\"version\":\"1.0.0\"}"
     },
     "resources": [
         {
             "type": "Microsoft.KeyVault/vaults",
-            "apiVersion": "2019-09-01",
+            "apiVersion": "2021-11-01-preview",
             "name": "[variables('keyvaultName')]",
             "location": "[parameters('location')]",
             "properties": {
@@ -49,15 +51,19 @@
         },
         {
             "type": "Microsoft.KeyVault/vaults/keys",
-            "apiVersion": "2019-09-01",
+            "apiVersion": "2021-11-01-preview",
             "name": "[concat(variables('keyvaultName'), '/', variables('keyName'))]",
             "location": "[parameters('location')]",
             "dependsOn": [
                 "[resourceId('Microsoft.KeyVault/vaults', variables('keyvaultName'))]"
             ],
             "properties": {
-                "kty": "RSA",
-                "keySize": 4096
+                "kty": "RSA-HSM",
+                "keySize": 4096,
+                "release_policy": {
+                    "contentType": "[variables('policyType')]",
+                    "data": "[variables('policyData')]"
+                }
             }
         },
         {

@@ -14,6 +14,13 @@
                 "description": "The password for the administrator account of the new VM and domain"
             }
         },
+        "virtualMachineName": {
+            "type": "string",
+            "defaultValue": "adVM",
+            "metadata": {
+                "description": "Virtual machine name."
+            }
+        },
         "domainName": {
             "type": "string",
             "metadata": {
@@ -68,20 +75,13 @@
             "metadata": {
                 "description": "Location for all resources."
             }
-        },
-        "virtualMachineName": {
-            "type": "string",
-            "defaultValue": "adVM",
-            "metadata": {
-                "description": "Virtual machine name."
-            }
         }
     },
     "variables": {
-        "virtualNetworkName" : "vnet-acc-lab",
+        "virtualNetworkName": "vnet-acc-lab",
         "virtualNetworkAddressRange": "10.0.0.0/16",
-        "subnetName" : "snManagament",
-        "subnetRange" : "10.0.0.0/24",
+        "subnetName": "snManagament",
+        "subnetRange": "10.0.0.0/24",
         "privateIPAddress": "10.0.0.4",
         "networkInterfaceName": "[concat(parameters('virtualMachineName'),'-nic')]",
         "diskencsetName": "DEC-Set-ACC",

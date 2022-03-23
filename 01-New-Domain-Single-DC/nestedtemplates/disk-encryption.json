@@ -60,6 +60,7 @@
             "properties": {
                 "kty": "RSA-HSM",
                 "keySize": 3072,
+                "exportable": true,
                 "release_policy": {
                     "contentType": "[variables('policyType')]",
                     "data": "[variables('policyData')]"

@@ -59,6 +59,10 @@
             ],
             "properties": {
                 "kty": "RSA-HSM",
+                "keyOps": [
+                    "wrapKey",
+                    "unwrapKey"
+                ],
                 "keySize": 3072,
                 "exportable": true,
                 "release_policy": {

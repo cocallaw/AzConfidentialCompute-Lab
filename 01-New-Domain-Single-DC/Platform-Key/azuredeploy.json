@@ -84,7 +84,6 @@
         "subnetRange": "10.0.0.0/24",
         "privateIPAddress": "10.0.0.4",
         "networkInterfaceName": "[concat(parameters('virtualMachineName'),'-nic')]",
-        "diskencsetName": "DEC-Set-ACC",
         "imageReference": "[variables('imageList')[parameters('osImageName')]]",
         "imageList": {
             "Windows Server 2022 Gen 2": {
@@ -107,26 +106,6 @@
         }
     },
     "resources": [
-        {
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2021-04-01",
-            "name": "DiskEncryption",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('nestedtemplates/disk-encryption.json', parameters('_artifactsLocationSasToken')))]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "location": {
-                        "value": "[parameters('location')]"
-                    },
-                    "diskencsetName": {
-                        "value": "[variables('diskencsetName')]"
-                    }
-                }
-            }
-        },
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2021-04-01",
@@ -201,11 +180,8 @@
                         "caching": "ReadWrite",
                         "createOption": "FromImage",
                         "managedDisk": {
-                            "storageAccountType": "StandardSSD_LRS",
+                            "storageAccountType": "Premium_LRS",
                             "securityProfile": {
-                                "diskEncryptionSet": {
-                                    "id": "[resourceId('Microsoft.Compute/diskEncryptionSets', variables('diskencsetName'))]"
-                                },
                                 "securityEncryptionType": "DiskWithVMGuestState"
                             }
                         }
@@ -217,10 +193,7 @@
                             "createOption": "Empty",
                             "diskSizeGB": 20,
                             "managedDisk": {
-                                "storageAccountType": "StandardSSD_LRS",
-                                "diskEncryptionSet": {
-                                    "id": "[resourceId('Microsoft.Compute/diskEncryptionSets', variables('diskencsetName'))]"
-                                }
+                                "storageAccountType": "Premium_LRS"
                             },
                             "lun": 0
                         }

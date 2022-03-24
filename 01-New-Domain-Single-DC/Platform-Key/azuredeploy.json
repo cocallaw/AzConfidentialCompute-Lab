@@ -82,7 +82,6 @@
         "virtualNetworkAddressRange": "10.0.0.0/16",
         "subnetName": "snManagament",
         "subnetRange": "10.0.0.0/24",
-        "subnetRangeBastion": "10.0.255.0/24",
         "privateIPAddress": "10.0.0.4",
         "networkInterfaceName": "[concat(parameters('virtualMachineName'),'-nic')]",
         "imageReference": "[variables('imageList')[parameters('osImageName')]]",
@@ -130,9 +129,6 @@
                     },
                     "subnetRange": {
                         "value": "[variables('subnetRange')]"
-                    },
-                    "subnetRangeBastion": {
-                        "value": "[variables('subnetRangeBastion')]"
                     },
                     "location": {
                         "value": "[parameters('location')]"

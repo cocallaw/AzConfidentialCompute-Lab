@@ -266,21 +266,7 @@
                             }
                         }
                     },
-                    "dataDisks": [
-                        {
-                            "name": "[concat(parameters('virtualMachineBaseName'),'-', copyIndex(),'-datadisk')]",
-                            "caching": "ReadWrite",
-                            "createOption": "Empty",
-                            "diskSizeGB": 20,
-                            "managedDisk": {
-                                "storageAccountType": "StandardSSD_LRS",
-                                "diskEncryptionSet": {
-                                    "id": "[resourceId('Microsoft.Compute/diskEncryptionSets', variables('diskencsetName'))]"
-                                }
-                            },
-                            "lun": 0
-                        }
-                    ]
+                    "dataDisks": []
                 },
                 "networkProfile": {
                     "networkInterfaces": [

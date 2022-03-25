@@ -5,11 +5,8 @@
     "adminUsername": {
       "value": "GEN-UNIQUE"
     },
-    "adminPassword": {
-      "value": "GEN-PASSWORD"
-    },
-    "domainName": {
-      "value": "corp.mydomain.com"
+    "adminPasswordOrKey": {
+        "value": "" 
     }
   }
 }

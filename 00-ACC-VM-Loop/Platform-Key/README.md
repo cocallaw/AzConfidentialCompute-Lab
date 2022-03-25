@@ -1,6 +1,7 @@
 # Create Lab of ACC VMs
 ###  Encryption for deployed VMs will use Azure platform managed key
 </br>
+This template will deploy a lab of ACC VMs using Azure Platform Managed Key, along with a new VNet and Bastion Host.
 </br></br>
 Click the button below to deploy
 </br></br>

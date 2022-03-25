@@ -26,6 +26,18 @@
         "description": "The address range of the subnet created in the new VNET"
       }
     },
+    "subnetNameBastion": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the Bastion subnet created in the new VNET"
+      }
+    },
+    "subnetRangeBastion": {
+      "type": "string",
+      "metadata": {
+        "description": "The address range of the Bastion subnet created in the new VNET"
+      }
+    },
     "location": {
       "type": "string",
       "metadata": {
@@ -50,6 +62,12 @@
             "name": "[parameters('subnetName')]",
             "properties": {
               "addressPrefix": "[parameters('subnetRange')]"
+            }
+          },
+          {
+            "name": "[parameters('subnetNameBastion')]",
+            "properties": {
+              "addressPrefix": "[parameters('subnetRangeBastion')]"
             }
           }
         ]

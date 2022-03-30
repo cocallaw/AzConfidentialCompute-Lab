@@ -22,64 +22,7 @@
         "keyVaultSku": "premium",
         "keyName": "key1",
         "policyType": "application/json; charset=utf-8",
-        "policyData": "{\"version\":\"1.0.0\",\"anyOf\":[{\"authority\":\"https://sharedeus.eus.attest.azure.net/\",\"allOf\":[{\"claim\":\"x-ms-attestation-type\",\"equals\":\"sevsnpvm\"},{\"claim\":\"x-ms-compliance-status\",\"equals\":\"azure-compliant-cvm\"}]},{\"authority\":\"https://sharedwus.wus.attest.azure.net/\",\"allOf\":[{\"claim\":\"x-ms-attestation-type\",\"equals\":\"sevsnpvm\"},{\"claim\":\"x-ms-compliance-status\",\"equals\":\"azure-compliant-cvm\"}]},{\"authority\":\"https://sharedneu.neu.attest.azure.net/\",\"allOf\":[{\"claim\":\"x-ms-attestation-type\",\"equals\":\"sevsnpvm\"},{\"claim\":\"x-ms-compliance-status\",\"equals\":\"azure-compliant-cvm\"}]},{\"authority\":\"https://sharedweu.weu.attest.azure.net/\",\"allOf\":[{\"claim\":\"x-ms-attestation-type\",\"equals\":\"sevsnpvm\"},{\"claim\":\"x-ms-compliance-status\",\"equals\":\"azure-compliant-cvm\"}]}]}",
-        "keyPolicyJSON": {
-            "anyOf": [
-                {
-                    "allOf": [
-                        {
-                            "claim": "x-ms-attestation-type",
-                            "equals": "sevsnpvm"
-                        },
-                        {
-                            "claim": "x-ms-compliance-status",
-                            "equals": "azure-compliant-cvm"
-                        }
-                    ],
-                    "authority": "https://sharedeus.eus.attest.azure.net/"
-                },
-                {
-                    "allOf": [
-                        {
-                            "claim": "x-ms-attestation-type",
-                            "equals": "sevsnpvm"
-                        },
-                        {
-                            "claim": "x-ms-compliance-status",
-                            "equals": "azure-compliant-cvm"
-                        }
-                    ],
-                    "authority": "https://sharedwus.wus.attest.azure.net/"
-                },
-                {
-                    "allOf": [
-                        {
-                            "claim": "x-ms-attestation-type",
-                            "equals": "sevsnpvm"
-                        },
-                        {
-                            "claim": "x-ms-compliance-status",
-                            "equals": "azure-compliant-cvm"
-                        }
-                    ],
-                    "authority": "https://sharedneu.neu.attest.azure.net/"
-                },
-                {
-                    "allOf": [
-                        {
-                            "claim": "x-ms-attestation-type",
-                            "equals": "sevsnpvm"
-                        },
-                        {
-                            "claim": "x-ms-compliance-status",
-                            "equals": "azure-compliant-cvm"
-                        }
-                    ],
-                    "authority": "https://sharedweu.weu.attest.azure.net/"
-                }
-            ],
-            "version": "1.0.0"
-        }
+        "policyData": "ew0KICAgICJhbnlPZiI6ICBbDQogICAgICAgICAgICAgICAgICB7DQogICAgICAgICAgICAgICAgICAgICAgImFsbE9mIjogICIgIiwNCiAgICAgICAgICAgICAgICAgICAgICAiYXV0aG9yaXR5IjogICJodHRwczovL3NoYXJlZGV1cy5ldXMuYXR0ZXN0LmF6dXJlLm5ldC8iDQogICAgICAgICAgICAgICAgICB9LA0KICAgICAgICAgICAgICAgICAgew0KICAgICAgICAgICAgICAgICAgICAgICJhbGxPZiI6ICAiICIsDQogICAgICAgICAgICAgICAgICAgICAgImF1dGhvcml0eSI6ICAiaHR0cHM6Ly9zaGFyZWR3dXMud3VzLmF0dGVzdC5henVyZS5uZXQvIg0KICAgICAgICAgICAgICAgICAgfSwNCiAgICAgICAgICAgICAgICAgIHsNCiAgICAgICAgICAgICAgICAgICAgICAiYWxsT2YiOiAgIiAiLA0KICAgICAgICAgICAgICAgICAgICAgICJhdXRob3JpdHkiOiAgImh0dHBzOi8vc2hhcmVkbmV1Lm5ldS5hdHRlc3QuYXp1cmUubmV0LyINCiAgICAgICAgICAgICAgICAgIH0sDQogICAgICAgICAgICAgICAgICB7DQogICAgICAgICAgICAgICAgICAgICAgImFsbE9mIjogICIgIiwNCiAgICAgICAgICAgICAgICAgICAgICAiYXV0aG9yaXR5IjogICJodHRwczovL3NoYXJlZHdldS53ZXUuYXR0ZXN0LmF6dXJlLm5ldC8iDQogICAgICAgICAgICAgICAgICB9DQogICAgICAgICAgICAgIF0sDQogICAgInZlcnNpb24iOiAgIjEuMC4wIg0KfQ"
     },
     "resources": [
         {
@@ -126,8 +69,8 @@
                 "keySize": 3072,
                 "kty": "RSA-HSM",
                 "release_policy": {
-                    "contentType": "application/json; charset=utf-8",
-                    "data": "[variables('keyPolicyJSON')]"
+                    "contentType": "[variables('policyType')]",
+                    "data": "[variables('policyData')]"
                 }
             }
         },

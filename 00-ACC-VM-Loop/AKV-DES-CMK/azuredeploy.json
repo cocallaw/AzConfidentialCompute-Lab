@@ -258,7 +258,7 @@
                         "caching": "ReadWrite",
                         "createOption": "FromImage",
                         "managedDisk": {
-                            "storageAccountType": "StandardSSD_LRS",
+                            "storageAccountType": "Premium_LRS",
                             "securityProfile": {
                                 "diskEncryptionSet": {
                                     "id": "[resourceId('Microsoft.Compute/diskEncryptionSets', variables('diskencsetName'))]"

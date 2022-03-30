@@ -12,14 +12,6 @@ function Invoke-Base64UrlEncode {
     Write-Output $output
 }
 
-# import content from json file and store in variable $content
 $inFile = Get-Content -Path .\skr-policy.json -Raw -Encoding UTF8 | ConvertFrom-Json
-
-# serialize json content in variable $content and store in variable $jsonstring
-$jsonstring = ConvertTo-Json -InputObject $inFile
-
-# convert $jsonstring to byte array and store in variable $jsonbytes
-$jsonbytes = [System.Text.Encoding]::UTF8.GetBytes($jsonstring)
-
-# convert $jsonbytes to base64 string and format for base64url
+$jsonbytes = [System.Text.Encoding]::UTF8.GetBytes(($inFile | ConvertTo-Json -Depth 4)) 
 Invoke-Base64UrlEncode -Argument $jsonbytes

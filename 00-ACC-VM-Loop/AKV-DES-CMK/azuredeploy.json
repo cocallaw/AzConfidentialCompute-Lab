@@ -28,8 +28,9 @@
         "virtualMachineBaseName": {
             "type": "string",
             "defaultValue": "accvm",
+            "maxLength": 10,
             "metadata": {
-                "description": "Virtual machine name."
+                "description": "Virtual machine base name that will incrimented and built on for resources."
             }
         },
         "numberOfACCVMs": {

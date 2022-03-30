@@ -1,3 +1,8 @@
+Param (
+    [Parameter(Mandatory = $true)][string]$fpath
+)
+
+#region functions
 function Invoke-Base64UrlEncode {
     [CmdletBinding()]
     param (
@@ -11,7 +16,10 @@ function Invoke-Base64UrlEncode {
     $output = $output.Replace('/', '_')
     Write-Output $output
 }
+#endregion functions 
 
-$inFile = Get-Content -Path .\skr-policy.json -Raw -Encoding UTF8 | ConvertFrom-Json
+#region main
+$inFile = Get-Content -Path $fpath -Raw -Encoding UTF8 | ConvertFrom-Json
 $jsonbytes = [System.Text.Encoding]::UTF8.GetBytes(($inFile | ConvertTo-Json -Depth 4)) 
 Invoke-Base64UrlEncode -Argument $jsonbytes
+#endregion main

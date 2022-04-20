@@ -35,8 +35,8 @@
         },
         "numberOfACCVMs": {
             "type": "int",
-            "defaultValue": 2,
-            "minValue": 2,
+            "defaultValue": 1,
+            "minValue": 1,
             "maxValue": 50,
             "metadata": {
                 "description": "Number of ACC VMs to deploy"

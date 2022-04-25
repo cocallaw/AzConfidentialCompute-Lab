@@ -1,0 +1,36 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+      "adminUsername": {
+          "value": ""
+      },
+      "authenticationType": {
+          "value": ""
+      },
+      "adminPasswordOrKey": {
+          "value": ""
+      },
+      "virtualMachineBaseName": {
+          "value": ""
+      },
+      "numberOfACCVMs": {
+          "value": 1
+      },
+      "vmSize": {
+          "value": "Standard_DC2as_v5"
+      },
+      "osImageName": {
+          "value": "Windows Server 2022 Gen 2"
+      },
+      "securityType": {
+          "value": "DiskWithVMGuestState"
+      },
+      "objectIDConfidentialOrchestrator": {
+          "value": ""
+      },
+      "location": {
+          "value": "westus"
+      }
+  }
+}

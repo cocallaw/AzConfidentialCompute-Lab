@@ -92,7 +92,7 @@
         },
         "objectIDConfidentialOrchestrator": {
             "type": "securestring",
-            "defaultValue" : "00000000-0000-0000-0000-000000000000",
+            "defaultValue": "00000000-0000-0000-0000-000000000000",
             "metadata": {
                 "description": "Object ID of the Confidential VM Orchestrator Service Principal"
             }

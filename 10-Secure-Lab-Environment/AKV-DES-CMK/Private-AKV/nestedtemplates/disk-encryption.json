@@ -11,7 +11,7 @@
         },
         "diskEncryptSetName": {
             "type": "string",
-            "defaultValue": "DES-ACC-01",
+            "defaultValue": "DES-01",
             "metadata": {
                 "description": "Name of Disk Encryption Set"
             }
@@ -87,20 +87,7 @@
                     "contentType": "[variables('policyType')]",
                     "data": "[variables('policyData')]"
                 },
-                "accessPolicies": [
-                    {
-                        "tenantId": "[subscription().tenantId]",
-                        "objectId": "[parameters('objectIDConfidentialOrchestrator')]",
-                        "permissions": {
-                            "keys": [
-                                "Get",
-                                "Release"
-                            ],
-                            "secrets": [],
-                            "certificates": []
-                        }
-                    }
-                ]
+                "accessPolicies": []
             }
         },
         {
@@ -126,7 +113,7 @@
         },
         {
             "type": "Microsoft.KeyVault/vaults/accessPolicies",
-            "apiVersion": "2019-09-01",
+            "apiVersion": "2021-11-01-preview",
             "name": "[concat(parameters('keyvaultName'), '/add')]",
             "dependsOn": [
                 "[variables('diskEncryptSetID')]",
@@ -142,6 +129,18 @@
                                 "Get",
                                 "WrapKey",
                                 "UnwrapKey"
+                            ],
+                            "secrets": [],
+                            "certificates": []
+                        }
+                    },
+                    {
+                        "tenantId": "[subscription().tenantId]",
+                        "objectId": "[parameters('objectIDConfidentialOrchestrator')]",
+                        "permissions": {
+                            "keys": [
+                                "Get",
+                                "Release"
                             ],
                             "secrets": [],
                             "certificates": []

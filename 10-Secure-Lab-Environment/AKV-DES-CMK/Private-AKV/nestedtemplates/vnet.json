@@ -61,7 +61,8 @@
           {
             "name": "[parameters('subnetName')]",
             "properties": {
-              "addressPrefix": "[parameters('subnetRange')]"
+              "addressPrefix": "[parameters('subnetRange')]",
+              "privateEndpointNetworkPolicies": "Disabled"
             }
           },
           {

@@ -127,7 +127,7 @@
         "keyVaultName": "[concat('AKV-', uniquestring(resourceGroup().id, deployment().name))]",
         "keyVaultSubnetName": "snAKV",
         "keyVaultSubnetRange": "10.0.1.0/24",
-        "diskEncryptSetName": "DEC-Set-ACC",
+        "diskEncryptSetName": "DES-01",
         "imageReference": "[variables('imageList')[parameters('osImageName')]]",
         "imageList": {
             "Windows Server 2022 Gen 2": {
@@ -267,7 +267,7 @@
             "name": "[concat(parameters('virtualMachineBaseName'),'-nic-', copyindex())]",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "VNet"
+                "PrivateEndpoint"
             ],
             "copy": {
                 "name": "VM-NIC-Loop",

@@ -67,7 +67,7 @@
   "functions": [],
   "variables": {
     "virtualNetworkID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
-    "publicIpAddressName": "[format('{0}-pip', parameters('bastionHostName'))]",
+    "publicIpAddressName": "[format('pip-{0}', parameters('bastionHostName'))]",
     "publicIpAddressId": "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIpAddressName'))]"
   },
   "resources": [

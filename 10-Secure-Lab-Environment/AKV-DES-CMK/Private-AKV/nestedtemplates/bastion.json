@@ -66,11 +66,9 @@
   },
   "functions": [],
   "variables": {
-    "bastionSubnetName": "AzureBastionSubnet",
     "virtualNetworkID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
     "publicIpAddressName": "[format('{0}-pip', parameters('bastionHostName'))]",
-    "publicIpAddressId": "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIpAddressName'))]",
-    "bastionSubnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), variables('bastionSubnetName'))]"
+    "publicIpAddressId": "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIpAddressName'))]"
   },
   "resources": [
     {
@@ -133,7 +131,7 @@
             "name": "IpConf",
             "properties": {
               "subnet": {
-                "id": "[variables('bastionSubnetId')]"
+                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('bastionSubnetName'))]"
               },
               "publicIPAddress": {
                 "id": "[variables('publicIpAddressId')]"
@@ -143,7 +141,8 @@
         ]
       },
       "dependsOn": [
-        "[variables('publicIpAddressId')]"
+        "[variables('publicIpAddressId')]",
+        "[variables('virtualNetworkID')]"
       ]
     }
   ]

@@ -113,8 +113,7 @@
       "name": "[variables('publicIpAddressName')]",
       "location": "[parameters('location')]",
       "dependsOn": [
-        "[variables('virtualNetworkID')]",
-        "[variables('bastionSubnetId')]"
+        "[variables('virtualNetworkID')]"
       ],
       "sku": {
         "name": "Standard"

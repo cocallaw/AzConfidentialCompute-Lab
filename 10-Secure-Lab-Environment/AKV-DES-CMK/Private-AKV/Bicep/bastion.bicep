@@ -74,9 +74,6 @@ resource publicIpAddressName 'Microsoft.Network/publicIPAddresses@2020-05-01' = 
   properties: {
     publicIPAllocationMethod: 'Static'
   }
-  dependsOn: [
-    virtualNetworkID
-  ]
 }
 
 resource bastionHostName_resource 'Microsoft.Network/bastionHosts@2020-05-01' = {
@@ -97,8 +94,4 @@ resource bastionHostName_resource 'Microsoft.Network/bastionHosts@2020-05-01' = 
       }
     ]
   }
-  dependsOn: [
-    publicIpAddressId
-    virtualNetworkID
-  ]
 }

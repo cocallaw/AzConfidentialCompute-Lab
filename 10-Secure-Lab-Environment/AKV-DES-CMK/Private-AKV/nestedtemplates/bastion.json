@@ -5,13 +5,55 @@
     "virtualNetworkName": {
       "type": "string",
       "metadata": {
-        "description": "Name of vnet to which Azure Bastion should be deployed"
+        "description": "The name of the Virtual Network to Create"
+      }
+    },
+    "virtualNetworkAddressRange": {
+      "type": "string",
+      "metadata": {
+        "description": "The address range of the new VNET in CIDR format"
+      }
+    },
+    "subnetName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the subnet created in the new VNET"
+      }
+    },
+    "subnetRange": {
+      "type": "string",
+      "metadata": {
+        "description": "The address range of the subnet created in the VNET"
+      }
+    },
+    "keyVaultSubnetName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the Key Vault subnet created in the VNET"
+      }
+    },
+    "keyVaultSubnetRange": {
+      "type": "string",
+      "metadata": {
+        "description": "The address range of the Key Vault subnet created in the VNET"
       }
     },
     "bastionHostName": {
       "type": "string",
       "metadata": {
-        "description": "Name of Azure Bastion resource"
+        "description": "The Name of the Bastion Host"
+      }
+    },
+    "bastionSubnetName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the Bastion subnet created in the  VNET"
+      }
+    },
+    "bastionSubnetRange": {
+      "type": "string",
+      "metadata": {
+        "description": "The address range of the Bastion subnet created in the VNET"
       }
     },
     "location": {
@@ -25,16 +67,55 @@
   "functions": [],
   "variables": {
     "bastionSubnetName": "AzureBastionSubnet",
+    "virtualNetworkID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
     "publicIpAddressName": "[format('{0}-pip', parameters('bastionHostName'))]",
     "publicIpAddressId": "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIpAddressName'))]",
     "bastionSubnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), variables('bastionSubnetName'))]"
   },
   "resources": [
     {
+      "type": "Microsoft.Network/virtualNetworks",
+      "name": "[parameters('virtualNetworkName')]",
+      "apiVersion": "2020-08-01",
+      "location": "[parameters('location')]",
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[parameters('virtualNetworkAddressRange')]"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "[parameters('subnetName')]",
+            "properties": {
+              "addressPrefix": "[parameters('subnetRange')]",
+              "privateEndpointNetworkPolicies": "Disabled"
+            }
+          },
+          {
+            "name": "[parameters('keyVaultSubnetName')]",
+            "properties": {
+              "addressPrefix": "[parameters('keyVaultSubnetRange')]"
+            }
+          },
+          {
+            "name": "[parameters('bastionSubnetName')]",
+            "properties": {
+              "addressPrefix": "[parameters('bastionSubnetRange')]"
+            }
+          }
+        ]
+      }
+    },
+    {
       "type": "Microsoft.Network/publicIPAddresses",
       "apiVersion": "2020-05-01",
       "name": "[variables('publicIpAddressName')]",
       "location": "[parameters('location')]",
+      "dependsOn": [
+        "[variables('virtualNetworkID')]",
+        "[variables('bastionSubnetId')]"
+      ],
       "sku": {
         "name": "Standard"
       },

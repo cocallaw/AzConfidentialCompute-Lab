@@ -236,15 +236,6 @@
                     "keyVaultSubnetRange": {
                         "value": "[variables('keyVaultSubnetRange')]"
                     },
-                    "bastionSubnetName": {
-                        "value": "[variables('bastionSubnetName')]"
-                    },
-                    "bastionSubnetRange": {
-                        "value": "[variables('bastionSubnetRange')]"
-                    },
-                    "createBastion": {
-                        "value": "[parameters('createBastionHost')]"
-                    },
                     "location": {
                         "value": "[parameters('location')]"
                     }
@@ -301,10 +292,33 @@
                     "virtualNetworkName": {
                         "value": "[variables('virtualNetworkName')]"
                     },
+                    "virtualNetworkAddressRange": {
+                        "value": "[variables('virtualNetworkAddressRange')]"
+                    },
+                    "subnetName": {
+                        "value": "[variables('subnetName')]"
+                    },
+                    "subnetRange": {
+                        "value": "[variables('subnetRange')]"
+                    },
+                    "keyVaultSubnetName": {
+                        "value": "[variables('keyVaultSubnetName')]"
+                    },
+                    "keyVaultSubnetRange": {
+                        "value": "[variables('keyVaultSubnetRange')]"
+                    },
                     "bastionHostName": {
                         "value": "[variables('bastionHostName')]"
+                    },
+                    "bastionSubnetName": {
+                        "value": "[variables('bastionSubnetName')]"
+                    },
+                    "bastionSubnetRange": {
+                        "value": "[variables('bastionSubnetRange')]"
+                    },
+                    "location": {
+                        "value": "[parameters('location')]"
                     }
-
                 }
             }
         },
@@ -314,7 +328,7 @@
             "name": "[concat(parameters('virtualMachineBaseName'),'-nic-', copyindex())]",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "PrivateEndpoint"
+                "BastionHost"
             ],
             "copy": {
                 "name": "VM-NIC-Loop",

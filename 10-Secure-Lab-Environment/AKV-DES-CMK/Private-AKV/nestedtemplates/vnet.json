@@ -38,28 +38,6 @@
         "description": "The address range of the Key Vault subnet created in the new VNET"
       }
     },
-    "bastionSubnetName": {
-      "type": "string",
-      "metadata": {
-        "description": "The name of the Bastion subnet created in the VNET"
-      }
-    },
-    "bastionSubnetRange": {
-      "type": "string",
-      "metadata": {
-        "description": "The address range of the Bastion subnet created in the new VNET"
-      }
-    },
-    "createBastion": {
-      "type": "string",
-      "allowedValues": [
-        "yes",
-        "no"
-      ],
-      "metadata": {
-        "description": "Create a Bastion Host in the VNET Yes or No"
-      }
-    },
     "location": {
       "type": "string",
       "metadata": {
@@ -67,9 +45,9 @@
       }
     }
   },
+  "variables": { },
   "resources": [
     {
-      "condition": "[equals(parameters('createBastion'), 'no')]",
       "type": "Microsoft.Network/virtualNetworks",
       "name": "[parameters('virtualNetworkName')]",
       "apiVersion": "2020-08-01",
@@ -92,41 +70,6 @@
             "name": "[parameters('keyVaultSubnetName')]",
             "properties": {
               "addressPrefix": "[parameters('keyVaultSubnetRange')]"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "condition": "[equals(parameters('createBastion'), 'yes')]",
-      "type": "Microsoft.Network/virtualNetworks",
-      "name": "[parameters('virtualNetworkName')]",
-      "apiVersion": "2020-08-01",
-      "location": "[parameters('location')]",
-      "properties": {
-        "addressSpace": {
-          "addressPrefixes": [
-            "[parameters('virtualNetworkAddressRange')]"
-          ]
-        },
-        "subnets": [
-          {
-            "name": "[parameters('subnetName')]",
-            "properties": {
-              "addressPrefix": "[parameters('subnetRange')]",
-              "privateEndpointNetworkPolicies": "Disabled"
-            }
-          },
-          {
-            "name": "[parameters('keyVaultSubnetName')]",
-            "properties": {
-              "addressPrefix": "[parameters('keyVaultSubnetRange')]"
-            }
-          },
-          {
-            "name": "[parameters('bastionSubnetName')]",
-            "properties": {
-              "addressPrefix": "[parameters('bastionSubnetRange')]"
             }
           }
         ]

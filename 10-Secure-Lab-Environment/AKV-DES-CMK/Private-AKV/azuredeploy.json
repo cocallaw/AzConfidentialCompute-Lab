@@ -90,6 +90,14 @@
                 "description": "VM security type."
             }
         },
+        "createBastionHost": {
+            "type": "string",
+            "defaultValue": "yes",
+            "allowedValues": [
+                "yes",
+                "no"
+            ]
+        },
         "objectIDConfidentialOrchestrator": {
             "type": "securestring",
             "defaultValue": "00000000-0000-0000-0000-000000000000",
@@ -128,6 +136,9 @@
         "keyVaultSubnetName": "snAKV",
         "keyVaultSubnetRange": "10.0.1.0/24",
         "diskEncryptSetName": "DES-01",
+        "bastionHostName": "bastion-01",
+        "bastionSubnetName": "AzureBastionSubnet",
+        "bastionSubnetRange": "10.0.255.0/24",
         "imageReference": "[variables('imageList')[parameters('osImageName')]]",
         "imageList": {
             "Windows Server 2022 Gen 2": {
@@ -225,6 +236,15 @@
                     "keyVaultSubnetRange": {
                         "value": "[variables('keyVaultSubnetRange')]"
                     },
+                    "bastionSubnetName": {
+                        "value": "[variables('bastionSubnetName')]"
+                    },
+                    "bastionSubnetRange": {
+                        "value": "[variables('bastionSubnetRange')]"
+                    },
+                    "createBastion": {
+                        "value": "[parameters('createBastionHost')]"
+                    },
                     "location": {
                         "value": "[parameters('location')]"
                     }
@@ -262,6 +282,33 @@
             }
         },
         {
+            "condition": "[equals(parameters('createBastionHost'), 'yes')]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2021-04-01",
+            "name": "BastionHost",
+            "dependsOn": [
+                "DiskEncryption",
+                "VNet",
+                "PrivateEndpoint"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('nestedtemplates/bastion.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "virtualNetworkName": {
+                        "value": "[variables('virtualNetworkName')]"
+                    },
+                    "bastionHostName": {
+                        "value": "[variables('bastionHostName')]"
+                    }
+
+                }
+            }
+        },
+        {
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "2019-02-01",
             "name": "[concat(parameters('virtualMachineBaseName'),'-nic-', copyindex())]",
@@ -289,7 +336,7 @@
         },
         {
             "type": "Microsoft.Compute/virtualMachines",
-            "apiVersion": "2021-07-01",
+            "apiVersion": "2021-11-01",
             "name": "[concat(parameters('virtualMachineBaseName'),'-', copyIndex())]",
             "location": "[parameters('location')]",
             "copy": {

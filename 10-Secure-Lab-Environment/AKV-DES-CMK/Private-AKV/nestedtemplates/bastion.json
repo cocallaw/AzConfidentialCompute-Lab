@@ -1,0 +1,70 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "virtualNetworkName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of vnet to which Azure Bastion should be deployed"
+      }
+    },
+    "bastionHostName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of Azure Bastion resource"
+      }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Azure region for Bastion and virtual network"
+      }
+    }
+  },
+  "functions": [],
+  "variables": {
+    "bastionSubnetName": "AzureBastionSubnet",
+    "publicIpAddressName": "[format('{0}-pip', parameters('bastionHostName'))]",
+    "publicIpAddressId": "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIpAddressName'))]",
+    "bastionSubnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), variables('bastionSubnetName'))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Network/publicIPAddresses",
+      "apiVersion": "2020-05-01",
+      "name": "[variables('publicIpAddressName')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "Standard"
+      },
+      "properties": {
+        "publicIPAllocationMethod": "Static"
+      }
+    },
+    {
+      "type": "Microsoft.Network/bastionHosts",
+      "apiVersion": "2020-05-01",
+      "name": "[parameters('bastionHostName')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "IpConf",
+            "properties": {
+              "subnet": {
+                "id": "[variables('bastionSubnetId')]"
+              },
+              "publicIPAddress": {
+                "id": "[variables('publicIpAddressId')]"
+              }
+            }
+          }
+        ]
+      },
+      "dependsOn": [
+        "[variables('publicIpAddressId')]"
+      ]
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 # Azure Confidential Compute Secure Lab Environment
 
 ## Overview
-  These templates deploy a user defined amount of Azure Confidential Compute SKU VMs, and configures an Azure Key Vault (AKV) and Disk Encryption Set (DES) to support Confidential VM with CMK encryption.
+  These templates deploy a user defined amount of Azure Confidential Compute SKU VMs, and configures an Azure Key Vault (AKV) and Disk Encryption Set (DES) to support Confidential VM with CMK encryption. The AKV is connected to the Azure Virtual Network using a Private Endpoint, and the network settings configured to allow no public access to the AKV wiht only an exception for trusted Azure services. This provides a secure closed environment for the resources. 
 
 ## Prerequisites
 

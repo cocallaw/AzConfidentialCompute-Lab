@@ -59,9 +59,12 @@
                     "family": "A"
                 },
                 "networkAcls": {
-                    "defaultAction": "Allow",
-                    "bypass": "AzureServices"
-                }
+                    "bypass": "AzureServices",
+                    "defaultAction": "Deny",
+                    "ipRules": [],
+                    "virtualNetworkRules": []
+                },
+                "publicNetworkAccess": "disabled"
             }
         },
         {

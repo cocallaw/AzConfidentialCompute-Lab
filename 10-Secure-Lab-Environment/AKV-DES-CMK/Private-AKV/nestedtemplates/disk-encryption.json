@@ -130,9 +130,7 @@
                                 "Get",
                                 "WrapKey",
                                 "UnwrapKey"
-                            ],
-                            "secrets": [],
-                            "certificates": []
+                            ]
                         }
                     },
                     {
@@ -142,9 +140,7 @@
                             "keys": [
                                 "Get",
                                 "Release"
-                            ],
-                            "secrets": [],
-                            "certificates": []
+                            ]
                         }
                     }
                 ]

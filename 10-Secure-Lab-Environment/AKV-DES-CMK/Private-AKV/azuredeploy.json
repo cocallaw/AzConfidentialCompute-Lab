@@ -100,7 +100,6 @@
         },
         "objectIDConfidentialOrchestrator": {
             "type": "securestring",
-            "defaultValue": "00000000-0000-0000-0000-000000000000",
             "metadata": {
                 "description": "Object ID of the Confidential VM Orchestrator Service Principal"
             }
@@ -113,7 +112,7 @@
             "defaultValue": "[deployment().properties.templateLink.uri]"
         },
         "_artifactsLocationSasToken": {
-            "type": "string",
+            "type": "securestring",
             "metadata": {
                 "description": "Auto-generated token to access _artifactsLocation. Leave it blank unless you need to provide your own value."
             },
@@ -324,7 +323,7 @@
         },
         {
             "type": "Microsoft.Network/networkInterfaces",
-            "apiVersion": "2019-02-01",
+            "apiVersion": "2021-05-01",
             "name": "[concat(parameters('virtualMachineBaseName'),'-nic-', copyindex())]",
             "location": "[parameters('location')]",
             "dependsOn": [
@@ -379,8 +378,7 @@
                                 "securityEncryptionType": "[parameters('securityType')]"
                             }
                         }
-                    },
-                    "dataDisks": []
+                    }
                 },
                 "networkProfile": {
                     "networkInterfaces": [

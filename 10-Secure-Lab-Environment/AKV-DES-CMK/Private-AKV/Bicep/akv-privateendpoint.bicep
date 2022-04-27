@@ -20,13 +20,13 @@ var keyVaultPrivateEndpointGroupName = 'vault'
 var keyVaultPrivateDnsZoneId = keyVaultPrivateDnsZoneName.id
 var keyVaultPrivateDnsZoneGroupName_var = '${keyVaultPrivateEndpointGroupName}PrivateDnsZoneGroup'
 
-resource keyVaultPrivateDnsZoneName 'Microsoft.Network/privateDnsZones@2018-09-01' = {
+resource keyVaultPrivateDnsZoneName 'Microsoft.Network/privateDnsZones@2020-06-01' = {
   name: keyVaultPrivateDnsZoneName_var
   location: 'global'
   properties: {}
 }
 
-resource keyVaultPrivateNetworkLinkName 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2018-09-01' = {
+resource keyVaultPrivateNetworkLinkName 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2020-06-01' = {
   parent: keyVaultPrivateDnsZoneName
   name: keyVaultPrivateNetworkLinkName_var
   location: 'global'

@@ -28,7 +28,6 @@ param bastionSubnetRange string
 @description('Azure region for Bastion and virtual network')
 param location string = resourceGroup().location
 
-var virtualNetworkID = virtualNetworkName_resource.id
 var publicIpAddressName_var = 'pip-${bastionHostName}'
 var publicIpAddressId = publicIpAddressName.id
 

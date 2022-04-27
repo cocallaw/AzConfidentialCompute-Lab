@@ -1,3 +1,5 @@
+targetScope = 'resourceGroup'
+
 @description('The name of the administrator account of the new VM')
 param adminUsername string
 
@@ -20,6 +22,8 @@ param virtualMachineBaseName string = 'accvm'
 @minValue(1)
 @maxValue(50)
 param numberOfACCVMs int = 1
+
+param timeUnique string = utcNow('hhmmss')
 
 @description('Size of the VM for the DC')
 @allowed([
@@ -65,13 +69,7 @@ param createBastionHost string = 'yes'
 
 @description('Object ID of the Confidential VM Orchestrator Service Principal')
 @secure()
-param objectIDConfidentialOrchestrator string = '00000000-0000-0000-0000-000000000000'
-
-@description('The location of resources, such as templates and DSC modules, that the template depends on')
-param artifactsLocation string = deployment().properties.templateLink.uri
-
-@description('Auto-generated token to access _artifactsLocation. Leave it blank unless you need to provide your own value.')
-param artifactsLocationSasToken string = ''
+param objectIDConfidentialOrchestrator string = '0729609a-9190-469a-970a-06cbe9de52e3'
 
 @description('Location for all resources.')
 param location string = resourceGroup().location
@@ -80,7 +78,7 @@ var virtualNetworkName = 'vnet-acc-lab'
 var virtualNetworkAddressRange = '10.0.0.0/16'
 var subnetName = 'sn00'
 var subnetRange = '10.0.0.0/24'
-var keyVaultName = 'AKV-${uniqueString(resourceGroup().id, deployment().name)}'
+var keyVaultName = 'AKV-${uniqueString(resourceGroup().id, timeUnique)}'
 var keyVaultSubnetName = 'snAKV'
 var keyVaultSubnetRange = '10.0.1.0/24'
 var diskEncryptSetName = 'DES-01'

@@ -46,7 +46,6 @@ resource keyvaultName_resource 'Microsoft.KeyVault/vaults@2021-11-01-preview' = 
 resource keyvaultName_keyName 'Microsoft.KeyVault/vaults/keys@2021-11-01-preview' = {
   parent: keyvaultName_resource
   name: keyName
-  location: location
   properties: {
     attributes: {
       enabled: true

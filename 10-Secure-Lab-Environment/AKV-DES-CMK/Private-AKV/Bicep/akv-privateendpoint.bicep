@@ -14,12 +14,11 @@ var vnetId = resourceId('Microsoft.Network/virtualNetworks', virtualNetworkName)
 var subnetId = resourceId('Microsoft.Network/virtualNetworks/subnets', virtualNetworkName, keyVaultSubnetName)
 var keyVaultId = resourceId('Microsoft.KeyVault/vaults', keyVaultName)
 var keyVaultPrivateEndpointName_var = 'pe-${keyVaultName}'
-var keyVaultPrivateNetworkLinkName_var = '${keyVaultPrivateDnsZoneName_var}/link_to_${toLower(virtualNetworkName)}'
+var keyVaultPrivateNetworkLinkName_var = 'link_to_${toLower(virtualNetworkName)}'
 var keyVaultPrivateDnsZoneName_var = 'privatelink.vaultcore.azure.net'
 var keyVaultPrivateEndpointGroupName = 'vault'
 var keyVaultPrivateDnsZoneId = keyVaultPrivateDnsZoneName.id
-var keyVaultPrivateEndpointId = keyVaultPrivateEndpointName.id
-var keyVaultPrivateDnsZoneGroupName_var = '${keyVaultPrivateEndpointName_var}/${keyVaultPrivateEndpointGroupName}PrivateDnsZoneGroup'
+var keyVaultPrivateDnsZoneGroupName_var = '${keyVaultPrivateEndpointGroupName}PrivateDnsZoneGroup'
 
 resource keyVaultPrivateDnsZoneName 'Microsoft.Network/privateDnsZones@2018-09-01' = {
   name: keyVaultPrivateDnsZoneName_var
@@ -28,6 +27,7 @@ resource keyVaultPrivateDnsZoneName 'Microsoft.Network/privateDnsZones@2018-09-0
 }
 
 resource keyVaultPrivateNetworkLinkName 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2018-09-01' = {
+  parent: keyVaultPrivateDnsZoneName
   name: keyVaultPrivateNetworkLinkName_var
   location: 'global'
   properties: {
@@ -62,9 +62,13 @@ resource keyVaultPrivateEndpointName 'Microsoft.Network/privateEndpoints@2020-11
       }
     ]
   }
+  dependsOn: [
+    keyVaultPrivateDnsZoneName
+  ]
 }
 
 resource keyVaultPrivateDnsZoneGroupName 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2020-11-01' = {
+  parent: keyVaultPrivateEndpointName
   name: keyVaultPrivateDnsZoneGroupName_var
   properties: {
     privateDnsZoneConfigs: [

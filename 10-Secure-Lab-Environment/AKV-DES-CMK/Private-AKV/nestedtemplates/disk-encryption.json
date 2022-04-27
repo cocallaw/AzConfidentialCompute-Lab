@@ -60,9 +60,7 @@
                 },
                 "networkAcls": {
                     "bypass": "AzureServices",
-                    "defaultAction": "Deny",
-                    "ipRules": [],
-                    "virtualNetworkRules": []
+                    "defaultAction": "Deny"
                 },
                 "publicNetworkAccess": "disabled"
             }

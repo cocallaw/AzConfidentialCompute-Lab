@@ -24,7 +24,7 @@ jobs:
     - name: Run Bicep build
       uses: aliencube/bicep-build-actions@v0.1
       with:
-        files: '10-Secure-Lab-Environment/AKV-DES-CMK/Private-AKV/Bicep/*.bicep'
+        files: '10-Secure-Lab-Environment/AKV-DES-CMK/Private-AKV/Bicep/main.bicep'
 
     - name: Run ARM TTK
       uses: aliencube/arm-ttk-actions@v0.3

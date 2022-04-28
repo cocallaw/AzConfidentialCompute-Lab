@@ -28,7 +28,8 @@ jobs:
       with:
         filters: |
           securelab:
-            - '10-Secure-Lab-Environment/AKV-DES-CMK/Private-AKV/**'
+            - '10-Secure-Lab-Environment/AKV-DES-CMK/Private-AKV/*.json'
+            - '10-Secure-Lab-Environment/AKV-DES-CMK/Private-AKV/nestedtemplates/*.json'
 
   # JOB to build and test securelab template
   securelab:

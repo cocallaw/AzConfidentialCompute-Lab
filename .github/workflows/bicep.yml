@@ -30,7 +30,7 @@ jobs:
       uses: aliencube/arm-ttk-actions@v0.3
       id: armtest
       with:
-        path: ./10-Secure-Lab-Environment/AKV-DES-CMK/Private-AKV/Bicep
+        path: ./10-Secure-Lab-Environment/AKV-DES-CMK/Private-AKV/Bicep/main.json
 
     - name: Show ARM TTK test result
       shell: bash

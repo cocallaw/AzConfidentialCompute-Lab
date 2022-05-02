@@ -140,7 +140,7 @@ module Bastion 'bastion.bicep' = if (createBastionHost == 'yes') {
   ]
 }
 
-resource virtualMachineBaseName_nic 'Microsoft.Network/networkInterfaces@2019-02-01' = [for i in range(0, numberOfACCVMs): {
+resource virtualMachineBaseName_nic 'Microsoft.Network/networkInterfaces@2021-05-01' = [for i in range(0, numberOfACCVMs): {
   name: '${virtualMachineBaseName}-nic-${i}'
   location: location
   properties: {
@@ -156,6 +156,9 @@ resource virtualMachineBaseName_nic 'Microsoft.Network/networkInterfaces@2019-02
       }
     ]
   }
+  dependsOn: [
+    Bastion
+  ]
 }]
 
 resource virtualMachineBaseName_resource 'Microsoft.Compute/virtualMachines@2021-11-01' = [for i in range(0, numberOfACCVMs): {
@@ -202,4 +205,7 @@ resource virtualMachineBaseName_resource 'Microsoft.Compute/virtualMachines@2021
       }
     }
   }
+  dependsOn: [
+    virtualMachineBaseName_nic
+  ]
 }]

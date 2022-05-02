@@ -12,8 +12,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  build_and_test:
-    name: Bicep Build and Test
+  secure_build_and_test:
+    name: Secure Lab Bicep Build and Test
 
     runs-on: ubuntu-latest
 
@@ -37,3 +37,29 @@ jobs:
       continue-on-error: true
       run: |
         echo 'Results: ${{ toJSON(fromJSON(steps.armtest.outputs.results)) }}'    
+
+  accpmk_build_and_test:
+    name: ACCPMK Bicep Build and Test
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout the repo
+      uses: actions/checkout@v2
+
+    - name: Run Bicep build
+      uses: aliencube/bicep-build-actions@v0.1
+      with:
+        files: '00-ACC-VM-Loop/Platform-Key/Bicep/main.bicep'
+
+    - name: Run ARM TTK
+      uses: aliencube/arm-ttk-actions@v0.3
+      id: armtest
+      with:
+        path: ./00-ACC-VM-Loop/Platform-Key/Bicep/main.json
+
+    - name: Show ARM TTK test result
+      shell: bash
+      continue-on-error: true
+      run: |
+        echo 'Results: ${{ toJSON(fromJSON(steps.armtest.outputs.results)) }}'   

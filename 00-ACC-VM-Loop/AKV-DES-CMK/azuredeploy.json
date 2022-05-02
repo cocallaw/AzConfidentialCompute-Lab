@@ -117,7 +117,8 @@
         "virtualNetworkAddressRange": "10.0.0.0/16",
         "subnetName": "sn00",
         "subnetRange": "10.0.0.0/24",
-        "diskencsetName": "DEC-Set-ACC",
+        "keyVaultName": "[concat('AKV-', uniquestring(resourceGroup().id, deployment().name))]",
+        "diskEncryptSetName": "DES-01",
         "imageReference": "[variables('imageList')[parameters('osImageName')]]",
         "imageList": {
             "Windows Server 2022 Gen 2": {
@@ -168,17 +169,17 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
-                    "location": {
-                        "value": "[parameters('location')]"
-                    },
-                    "diskencsetName": {
-                        "value": "[variables('diskencsetName')]"
+                    "diskEncryptSetName": {
+                        "value": "[variables('diskEncryptSetName')]"
                     },
                     "keyVaultName": {
-                        "value": "" // TODO: Fill in parameter value
+                        "value": "[variables('keyVaultName')]"
                     },
                     "objectIDConfidentialOrchestrator": {
                         "value": "" // TODO: Fill in parameter value
+                    },
+                    "location": {
+                        "value": "[parameters('location')]"
                     }
                 }
             }
@@ -267,7 +268,7 @@
                             "storageAccountType": "Premium_LRS",
                             "securityProfile": {
                                 "diskEncryptionSet": {
-                                    "id": "[resourceId('Microsoft.Compute/diskEncryptionSets', variables('diskencsetName'))]"
+                                    "id": "[resourceId('Microsoft.Compute/diskEncryptionSets', variables('diskEncryptSetName'))]"
                                 },
                                 "securityEncryptionType": "[parameters('securityType')]"
                             }

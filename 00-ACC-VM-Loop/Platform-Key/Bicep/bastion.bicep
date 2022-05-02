@@ -25,7 +25,7 @@ param location string = resourceGroup().location
 var publicIpAddressName_var = 'pip-${bastionHostName}'
 var publicIpAddressId = publicIpAddressName.id
 
-resource virtualNetworkName_resource 'Microsoft.Network/virtualNetworks@2020-08-01' = {
+resource virtualNetworkName_resource 'Microsoft.Network/virtualNetworks@2021-05-01' = {
   name: virtualNetworkName
   location: location
   properties: {

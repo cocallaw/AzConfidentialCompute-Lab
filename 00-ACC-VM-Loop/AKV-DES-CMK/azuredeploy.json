@@ -173,6 +173,12 @@
                     },
                     "diskencsetName": {
                         "value": "[variables('diskencsetName')]"
+                    },
+                    "keyVaultName": {
+                        "value": "" // TODO: Fill in parameter value
+                    },
+                    "objectIDConfidentialOrchestrator": {
+                        "value": "" // TODO: Fill in parameter value
                     }
                 }
             }

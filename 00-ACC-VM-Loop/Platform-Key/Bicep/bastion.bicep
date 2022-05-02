@@ -51,7 +51,7 @@ resource virtualNetworkName_resource 'Microsoft.Network/virtualNetworks@2020-08-
   }
 }
 
-resource publicIpAddressName 'Microsoft.Network/publicIPAddresses@2020-05-01' = {
+resource publicIpAddressName 'Microsoft.Network/publicIPAddresses@2021-05-01' = {
   name: publicIpAddressName_var
   location: location
   sku: {
@@ -62,7 +62,7 @@ resource publicIpAddressName 'Microsoft.Network/publicIPAddresses@2020-05-01' = 
   }
 }
 
-resource bastionHostName_resource 'Microsoft.Network/bastionHosts@2020-05-01' = {
+resource bastionHostName_resource 'Microsoft.Network/bastionHosts@2021-05-01' = {
   name: bastionHostName
   location: location
   properties: {

@@ -12,7 +12,30 @@ on:
   workflow_dispatch:
 
 jobs:
+# JOB to run change detection
+  changes:
+    runs-on: ubuntu-latest
+    # Set job outputs to values from filter step
+    outputs:
+      securelab: ${{ steps.filter.outputs.securelab }}
+      accpmk: ${{ steps.filter.outputs.accpmk }}
+    steps:
+    # For pull requests it's not necessary to checkout the code
+    - uses: actions/checkout@v2
+    
+    - uses: dorny/paths-filter@v2
+      id: filter
+      with:
+        filters: |
+          securelab:
+            - '10-Secure-Lab-Environment/AKV-DES-CMK/Private-AKV/Bicep/*'
+          accpmk:
+            - '00-ACC-VM-Loop/Platform-Key/Bicep/*.json'
+
+
   secure_build_and_test:
+    needs: changes
+    if: ${{ needs.changes.outputs.securelab == 'true' }}
     name: Secure Lab Bicep Build and Test
 
     runs-on: ubuntu-latest
@@ -39,6 +62,8 @@ jobs:
         echo 'Results: ${{ toJSON(fromJSON(steps.armtest.outputs.results)) }}'    
 
   accpmk_build_and_test:
+    needs: changes
+    if: ${{ needs.changes.outputs.accpmk == 'true' }}
     name: ACCPMK Bicep Build and Test
 
     runs-on: ubuntu-latest

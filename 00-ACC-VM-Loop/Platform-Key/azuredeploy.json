@@ -35,8 +35,8 @@
         },
         "numberOfACCVMs": {
             "type": "int",
-            "defaultValue": 2,
-            "minValue": 2,
+            "defaultValue": 1,
+            "minValue": 1,
             "maxValue": 50,
             "metadata": {
                 "description": "Number of ACC VMs to deploy"
@@ -90,6 +90,14 @@
                 "description": "VM security type."
             }
         },
+        "createBastionHost": {
+            "type": "string",
+            "defaultValue": "yes",
+            "allowedValues": [
+                "yes",
+                "no"
+            ]
+        },
         "_artifactsLocation": {
             "type": "string",
             "metadata": {
@@ -117,6 +125,7 @@
         "virtualNetworkAddressRange": "10.0.0.0/16",
         "subnetName": "sn00",
         "subnetRange": "10.0.0.0/24",
+        "bastionHostName": "bastion-01",
         "subnetNameBastion": "AzureBastionSubnet",
         "subnetRangeBastion": "10.0.255.0/24",
         "imageReference": "[variables('imageList')[parameters('osImageName')]]",
@@ -182,12 +191,6 @@
                     "subnetRange": {
                         "value": "[variables('subnetRange')]"
                     },
-                    "subnetNameBastion": {
-                        "value": "[variables('subnetNameBastion')]"
-                    },
-                    "subnetRangeBastion": {
-                        "value": "[variables('subnetRangeBastion')]"
-                    },
                     "location": {
                         "value": "[parameters('location')]"
                     }
@@ -195,6 +198,7 @@
             }
         },
         {
+            "condition": "[equals(parameters('createBastionHost'), 'yes')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2021-04-01",
             "name": "Bastion",
@@ -208,17 +212,26 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
-                    "vnetName": {
+                    "virtualNetworkName": {
                         "value": "[variables('virtualNetworkName')]"
                     },
-                    "vnetIpPrefix": {
+                    "virtualNetworkAddressRange": {
                         "value": "[variables('virtualNetworkAddressRange')]"
                     },
-                    "bastionSubnetIpPrefix": {
+                    "subnetName": {
+                        "value": "[variables('subnetName')]"
+                    },
+                    "subnetRange": {
+                        "value": "[variables('subnetRange')]"
+                    },
+                    "bastionSubnetName": {
+                        "value": "[variables('subnetNameBastion')]"
+                    },
+                    "bastionSubnetRange": {
                         "value": "[variables('subnetRangeBastion')]"
                     },
                     "bastionHostName": {
-                        "value": "bast-acclab-01"
+                        "value": "[variables('bastionHostName')]"
                     }
                 }
             }

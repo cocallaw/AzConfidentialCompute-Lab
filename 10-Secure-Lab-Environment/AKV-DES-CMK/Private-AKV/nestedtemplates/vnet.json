@@ -45,7 +45,7 @@
       }
     }
   },
-  "variables": { },
+  "variables": {},
   "resources": [
     {
       "type": "Microsoft.Network/virtualNetworks",
@@ -69,7 +69,8 @@
           {
             "name": "[parameters('keyVaultSubnetName')]",
             "properties": {
-              "addressPrefix": "[parameters('keyVaultSubnetRange')]"
+              "addressPrefix": "[parameters('keyVaultSubnetRange')]",
+              "privateEndpointNetworkPolicies": "Disabled"
             }
           }
         ]

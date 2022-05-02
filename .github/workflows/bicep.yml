@@ -1,4 +1,4 @@
-name: ARM Template Build and Test
+name: Bicep Template Build and Test
 
 # Controls when the action will run. 
 on:

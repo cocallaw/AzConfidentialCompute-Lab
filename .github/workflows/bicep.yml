@@ -30,7 +30,7 @@ jobs:
           securelab:
             - '10-Secure-Lab-Environment/AKV-DES-CMK/Private-AKV/Bicep/*'
           accpmk:
-            - '00-ACC-VM-Loop/Platform-Key/Bicep/*.json'
+            - '00-ACC-VM-Loop/Platform-Key/Bicep/*'
 
 
   secure_build_and_test:

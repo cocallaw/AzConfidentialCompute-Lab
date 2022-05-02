@@ -126,8 +126,8 @@
         "subnetName": "sn00",
         "subnetRange": "10.0.0.0/24",
         "bastionHostName": "bastion-01",
-        "subnetNameBastion": "AzureBastionSubnet",
-        "subnetRangeBastion": "10.0.255.0/24",
+        "bastionSubnetName": "AzureBastionSubnet",
+        "bastionSubnetRange": "10.0.255.0/24",
         "imageReference": "[variables('imageList')[parameters('osImageName')]]",
         "imageList": {
             "Windows Server 2022 Gen 2": {
@@ -225,13 +225,16 @@
                         "value": "[variables('subnetRange')]"
                     },
                     "bastionSubnetName": {
-                        "value": "[variables('subnetNameBastion')]"
+                        "value": "[variables('bastionSubnetName')]"
                     },
                     "bastionSubnetRange": {
-                        "value": "[variables('subnetRangeBastion')]"
+                        "value": "[variables('bastionSubnetRange')]"
                     },
                     "bastionHostName": {
                         "value": "[variables('bastionHostName')]"
+                    },
+                    "location": {
+                        "value": "[parameters('location')]"
                     }
                 }
             }

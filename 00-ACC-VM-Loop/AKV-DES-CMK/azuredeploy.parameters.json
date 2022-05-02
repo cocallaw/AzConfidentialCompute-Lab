@@ -7,6 +7,9 @@
     },
     "adminPasswordOrKey": {
         "value": "" 
+    },
+    "objectIDConfidentialOrchestrator": {
+        "value": ""
     }
   }
 }

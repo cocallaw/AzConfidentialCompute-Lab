@@ -111,7 +111,7 @@
         },
         {
             "type": "Microsoft.KeyVault/vaults/accessPolicies",
-            "apiVersion": "2019-09-01",
+            "apiVersion": "2021-11-01-preview",
             "name": "[concat(parameters('keyvaultName'), '/add')]",
             "dependsOn": [
                 "[variables('diskEncryptSetID')]",

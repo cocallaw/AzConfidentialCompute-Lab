@@ -90,6 +90,20 @@
                 "description": "VM security type."
             }
         },
+        "createBastionHost": {
+            "type": "string",
+            "defaultValue": "yes",
+            "allowedValues": [
+                "yes",
+                "no"
+            ]
+        },
+        "objectIDConfidentialOrchestrator": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Object ID of the Confidential VM Orchestrator Service Principal"
+            }
+        },
         "_artifactsLocation": {
             "type": "string",
             "metadata": {
@@ -117,6 +131,9 @@
         "virtualNetworkAddressRange": "10.0.0.0/16",
         "subnetName": "sn00",
         "subnetRange": "10.0.0.0/24",
+        "bastionHostName": "bastion-01",
+        "bastionSubnetName": "AzureBastionSubnet",
+        "bastionSubnetRange": "10.0.255.0/24",
         "keyVaultName": "[concat('AKV-', uniquestring(resourceGroup().id, deployment().name))]",
         "diskEncryptSetName": "DES-01",
         "imageReference": "[variables('imageList')[parameters('osImageName')]]",
@@ -176,7 +193,7 @@
                         "value": "[variables('keyVaultName')]"
                     },
                     "objectIDConfidentialOrchestrator": {
-                        "value": "" // TODO: Fill in parameter value
+                        "value": "[parameters('objectIDConfidentialOrchestrator')]"
                     },
                     "location": {
                         "value": "[parameters('location')]"
@@ -217,12 +234,54 @@
             }
         },
         {
+            "condition": "[equals(parameters('createBastionHost'), 'yes')]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2021-04-01",
+            "name": "Bastion",
+            "dependsOn": [
+                "VNet"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('nestedtemplates/bastion.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "virtualNetworkName": {
+                        "value": "[variables('virtualNetworkName')]"
+                    },
+                    "virtualNetworkAddressRange": {
+                        "value": "[variables('virtualNetworkAddressRange')]"
+                    },
+                    "subnetName": {
+                        "value": "[variables('subnetName')]"
+                    },
+                    "subnetRange": {
+                        "value": "[variables('subnetRange')]"
+                    },
+                    "bastionSubnetName": {
+                        "value": "[variables('bastionSubnetName')]"
+                    },
+                    "bastionSubnetRange": {
+                        "value": "[variables('bastionSubnetRange')]"
+                    },
+                    "bastionHostName": {
+                        "value": "[variables('bastionHostName')]"
+                    },
+                    "location": {
+                        "value": "[parameters('location')]"
+                    }
+                }
+            }
+        },
+        {
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "2019-02-01",
             "name": "[concat(parameters('virtualMachineBaseName'),'-nic-', copyindex())]",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "VNet"
+                "Bastion"
             ],
             "copy": {
                 "name": "VM-NIC-Loop",
@@ -244,7 +303,7 @@
         },
         {
             "type": "Microsoft.Compute/virtualMachines",
-            "apiVersion": "2021-07-01",
+            "apiVersion": "2021-11-01",
             "name": "[concat(parameters('virtualMachineBaseName'),'-', copyIndex())]",
             "location": "[parameters('location')]",
             "copy": {

@@ -19,6 +19,7 @@ jobs:
     # Set job outputs to values from filter step
     outputs:
       securelab: ${{ steps.filter.outputs.securelab }}
+      accpmk: ${{ steps.filter.outputs.accpmk }}
     steps:
     # For pull requests it's not necessary to checkout the code
     - uses: actions/checkout@v2
@@ -30,6 +31,9 @@ jobs:
           securelab:
             - '10-Secure-Lab-Environment/AKV-DES-CMK/Private-AKV/*.json'
             - '10-Secure-Lab-Environment/AKV-DES-CMK/Private-AKV/nestedtemplates/*.json'
+          accpmk:
+            - '00-ACC-VM-Loop/Platform-Key/*.json'
+            - '00-ACC-VM-Loop/Platform-Key/nestedtemplates/*.json'
 
   # JOB to build and test securelab template
   securelab:
@@ -44,6 +48,26 @@ jobs:
         uses: aliencube/arm-ttk-actions@v0.3
         with:
           path: ./10-Secure-Lab-Environment/AKV-DES-CMK/Private-AKV/*
+
+      - name: Test result - path
+        shell: bash
+        continue-on-error: true
+        run: |
+          echo "${{ toJSON(fromJSON(steps.pathtest.outputs.results)) }}"
+
+  # JOB to build and test accpmk template
+  accpmk:
+    needs: changes
+    if: ${{ needs.changes.outputs.accpmk == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Test ARM Templates - path
+        id: pathtest
+        uses: aliencube/arm-ttk-actions@v0.3
+        with:
+          path: ./00-ACC-VM-Loop/Platform-Key/*
 
       - name: Test result - path
         shell: bash

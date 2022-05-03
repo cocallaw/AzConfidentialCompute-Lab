@@ -102,7 +102,7 @@
             "properties": {
                 "activeKey": {
                     "sourceVault": {
-                        "id": "[variables('keyVaultKeyID')]"
+                        "id": "[variables('keyVaultID')]"
                     },
                     "keyUrl": "[reference(resourceId('Microsoft.KeyVault/vaults/keys', parameters('keyvaultName'), variables('keyName')), '2019-09-01', 'Full').properties.keyUriWithVersion]"
                 },

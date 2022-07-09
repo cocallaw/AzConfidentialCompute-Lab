@@ -11,10 +11,10 @@ param subnetName string
 param subnetRange string
 
 @description('The name of the Key Vault subnet created in the VNET')
-param keyVaultSubnetName string
+param mHSMSubnetName string
 
 @description('The address range of the Key Vault subnet created in the new VNET')
-param keyVaultSubnetRange string
+param mHSMSubnetRange string
 
 @description('Location for all resources.')
 param location string
@@ -37,9 +37,9 @@ resource virtualNetworkName_resource 'Microsoft.Network/virtualNetworks@2021-05-
         }
       }
       {
-        name: keyVaultSubnetName
+        name: mHSMSubnetName
         properties: {
-          addressPrefix: keyVaultSubnetRange
+          addressPrefix: mHSMSubnetRange
         }
       }
     ]

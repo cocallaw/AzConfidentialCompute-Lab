@@ -1,5 +1,5 @@
 @description('String specifying the name of the managed HSM.')
-param managedHSMName string
+param mHSMName string
 
 @description('String specifying the Azure location where the managed HSM should be created.')
 param location string = resourceGroup().location
@@ -16,7 +16,7 @@ param tenantId string = subscription().tenantId
 param softRetentionInDays int = 7
 
 resource managedHSM 'Microsoft.KeyVault/managedHSMs@2021-04-01-preview' = {
-  name: managedHSMName
+  name: mHSMName
   location: location
   sku: {
     name: 'Standard_B1'

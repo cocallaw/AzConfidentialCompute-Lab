@@ -1,0 +1,270 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "managedHSMs_ACCLab01_name": {
+            "defaultValue": "ACCLab01",
+            "type": "String"
+        },
+        "privateEndpoints_PE_MHSM_name": {
+            "defaultValue": "PE-MHSM",
+            "type": "String"
+        },
+        "virtualNetworks_vnet_mhsm_01_name": {
+            "defaultValue": "vnet-mhsm-01",
+            "type": "String"
+        },
+        "privateDnsZones_privatelink_managedhsm_azure_net_name": {
+            "defaultValue": "privatelink.managedhsm.azure.net",
+            "type": "String"
+        },
+        "networkInterfaces_PE_MHSM_nic_337943c2_75d6_4e6c_b8cf_c55f7f92e9a1_name": {
+            "defaultValue": "PE-MHSM.nic.337943c2-75d6-4e6c-b8cf-c55f7f92e9a1",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.KeyVault/managedHSMs",
+            "apiVersion": "2021-11-01-preview",
+            "name": "[parameters('managedHSMs_ACCLab01_name')]",
+            "location": "westeurope",
+            "sku": {
+                "name": "Standard_B1",
+                "family": "B"
+            },
+            "properties": {
+                "tenantId": "605a7cf2-e5e8-4035-8caf-72f19d4ce34f",
+                "initialAdminObjectIds": [
+                    "58540918-faeb-4cbc-a19e-ce071144d404"
+                ],
+                "enableSoftDelete": true,
+                "softDeleteRetentionInDays": 7,
+                "enablePurgeProtection": false,
+                "networkAcls": {
+                    "bypass": "AzureServices",
+                    "defaultAction": "Deny",
+                    "ipRules": [],
+                    "virtualNetworkRules": []
+                },
+                "publicNetworkAccess": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateDnsZones",
+            "apiVersion": "2018-09-01",
+            "name": "[parameters('privateDnsZones_privatelink_managedhsm_azure_net_name')]",
+            "location": "global",
+            "properties": {
+                "maxNumberOfRecordSets": 25000,
+                "maxNumberOfVirtualNetworkLinks": 1000,
+                "maxNumberOfVirtualNetworkLinksWithRegistration": 100,
+                "numberOfRecordSets": 2,
+                "numberOfVirtualNetworkLinks": 1,
+                "numberOfVirtualNetworkLinksWithRegistration": 1,
+                "provisioningState": "Succeeded"
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2020-11-01",
+            "name": "[parameters('virtualNetworks_vnet_mhsm_01_name')]",
+            "location": "westeurope",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "10.1.0.0/16"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "sn00",
+                        "properties": {
+                            "addressPrefix": "10.1.0.0/24",
+                            "delegations": [],
+                            "privateEndpointNetworkPolicies": "Enabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled"
+                        }
+                    },
+                    {
+                        "name": "sn01",
+                        "properties": {
+                            "addressPrefix": "10.1.1.0/24",
+                            "delegations": [],
+                            "privateEndpointNetworkPolicies": "Disabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled"
+                        }
+                    }
+                ],
+                "virtualNetworkPeerings": [],
+                "enableDdosProtection": false
+            }
+        },
+        {
+            "type": "Microsoft.KeyVault/managedHSMs/privateEndpointConnections",
+            "apiVersion": "2021-11-01-preview",
+            "name": "[concat(parameters('managedHSMs_ACCLab01_name'), '/MHSM-Connect')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/managedHSMs', parameters('managedHSMs_ACCLab01_name'))]"
+            ],
+            "properties": {
+                "provisioningState": "Succeeded",
+                "privateEndpoint": {},
+                "privateLinkServiceConnectionState": {
+                    "status": "Approved",
+                    "actionsRequired": "None"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2020-11-01",
+            "name": "[parameters('networkInterfaces_PE_MHSM_nic_337943c2_75d6_4e6c_b8cf_c55f7f92e9a1_name')]",
+            "location": "westeurope",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_vnet_mhsm_01_name'), 'sn01')]"
+            ],
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "privateEndpointIpConfig.828d6235-b8d5-4361-87b0-5abf05ca2fc3",
+                        "properties": {
+                            "privateIPAddress": "10.1.1.4",
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_vnet_mhsm_01_name'), 'sn01')]"
+                            },
+                            "primary": true,
+                            "privateIPAddressVersion": "IPv4"
+                        }
+                    }
+                ],
+                "dnsSettings": {
+                    "dnsServers": []
+                },
+                "enableAcceleratedNetworking": false,
+                "enableIPForwarding": false
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateDnsZones/A",
+            "apiVersion": "2018-09-01",
+            "name": "[concat(parameters('privateDnsZones_privatelink_managedhsm_azure_net_name'), '/acclab01')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/privateDnsZones', parameters('privateDnsZones_privatelink_managedhsm_azure_net_name'))]"
+            ],
+            "properties": {
+                "ttl": 3600,
+                "aRecords": [
+                    {
+                        "ipv4Address": "10.1.1.4"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateDnsZones/SOA",
+            "apiVersion": "2018-09-01",
+            "name": "[concat(parameters('privateDnsZones_privatelink_managedhsm_azure_net_name'), '/@')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/privateDnsZones', parameters('privateDnsZones_privatelink_managedhsm_azure_net_name'))]"
+            ],
+            "properties": {
+                "ttl": 3600,
+                "soaRecord": {
+                    "email": "azureprivatedns-host.microsoft.com",
+                    "expireTime": 2419200,
+                    "host": "azureprivatedns.net",
+                    "minimumTtl": 10,
+                    "refreshTime": 3600,
+                    "retryTime": 300,
+                    "serialNumber": 1
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2020-11-01",
+            "name": "[concat(parameters('virtualNetworks_vnet_mhsm_01_name'), '/sn00')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_vnet_mhsm_01_name'))]"
+            ],
+            "properties": {
+                "addressPrefix": "10.1.0.0/24",
+                "delegations": [],
+                "privateEndpointNetworkPolicies": "Enabled",
+                "privateLinkServiceNetworkPolicies": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2020-11-01",
+            "name": "[concat(parameters('virtualNetworks_vnet_mhsm_01_name'), '/sn01')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_vnet_mhsm_01_name'))]"
+            ],
+            "properties": {
+                "addressPrefix": "10.1.1.0/24",
+                "delegations": [],
+                "privateEndpointNetworkPolicies": "Disabled",
+                "privateLinkServiceNetworkPolicies": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+            "apiVersion": "2018-09-01",
+            "name": "[concat(parameters('privateDnsZones_privatelink_managedhsm_azure_net_name'), '/accmhsmlink')]",
+            "location": "global",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/privateDnsZones', parameters('privateDnsZones_privatelink_managedhsm_azure_net_name'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_vnet_mhsm_01_name'))]"
+            ],
+            "properties": {
+                "registrationEnabled": true,
+                "virtualNetwork": {
+                    "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_vnet_mhsm_01_name'))]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateEndpoints",
+            "apiVersion": "2020-11-01",
+            "name": "[parameters('privateEndpoints_PE_MHSM_name')]",
+            "location": "westeurope",
+            "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/managedHSMs', parameters('managedHSMs_ACCLab01_name'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_vnet_mhsm_01_name'), 'sn01')]"
+            ],
+            "properties": {
+                "privateLinkServiceConnections": [
+                    {
+                        "name": "MHSM-Connect",
+                        "properties": {
+                            "privateLinkServiceId": "[resourceId('Microsoft.KeyVault/managedHSMs', parameters('managedHSMs_ACCLab01_name'))]",
+                            "groupIds": [
+                                "managedhsm"
+                            ],
+                            "privateLinkServiceConnectionState": {
+                                "status": "Approved",
+                                "actionsRequired": "None"
+                            }
+                        }
+                    }
+                ],
+                "manualPrivateLinkServiceConnections": [],
+                "subnet": {
+                    "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_vnet_mhsm_01_name'), 'sn01')]"
+                },
+                "customDnsConfigs": [
+                    {
+                        "fqdn": "acclab01.managedhsm.azure.net",
+                        "ipAddresses": [
+                            "10.1.1.4"
+                        ]
+                    }
+                ]
+            }
+        }
+    ]
+}

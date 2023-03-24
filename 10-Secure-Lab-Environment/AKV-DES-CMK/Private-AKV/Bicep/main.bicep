@@ -68,8 +68,7 @@ param securityType string = 'DiskWithVMGuestState'
 param createBastionHost string = 'yes'
 
 @description('Object ID of the Confidential VM Orchestrator Service Principal')
-@secure()
-param objectIDConfidentialOrchestrator string = '0729609a-9190-469a-970a-06cbe9de52e3'
+param objectIDConfidentialOrchestrator string
 
 @description('Location for all resources.')
 param location string = resourceGroup().location
